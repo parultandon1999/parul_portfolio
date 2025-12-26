@@ -16,7 +16,7 @@ const Navigation = () => {
   }, []);
 
   const navLinks = [
-    { href: '/', label: '#home', isAnchor: true },
+    { href: '/parul_portfolio', label: '#home', isAnchor: true },
     { href: '/projects', label: '#projects', isAnchor: false },
     { href: '/skills', label: '#skills', isAnchor: false },
     { href: '/about', label: '#about', isAnchor: false },
