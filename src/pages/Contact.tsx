@@ -174,23 +174,23 @@ const Contact = () => {
         <ScrollDownIndicator />
 
         {/* Contact Info Cards */}
-        <section className="py-20 border-b border-border">
+        <section className="py-12 border-b border-border">
           <div className="container mx-auto px-6 lg:px-20">
-            <h2 className="text-3xl font-bold mb-12 text-foreground">
+            <h2 className="text-2xl font-bold mb-8 text-foreground">
               <span className="text-muted-foreground">#</span>get-in-touch
             </h2>
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-6">
               {contactInfo.map((info, index) => (
                 <a
                   key={index}
                   href={info.href}
-                  className="border border-border rounded-lg p-8 hover:border-foreground/50 transition-colors group"
+                  className="border border-border rounded-lg p-6 hover:border-foreground/50 transition-colors group"
                 >
-                  <div className="text-foreground mb-4 group-hover:scale-110 transition-transform">
+                  <div className="text-foreground mb-3 group-hover:scale-110 transition-transform">
                     {info.icon}
                   </div>
-                  <h3 className="text-lg font-bold text-foreground mb-2">{info.label}</h3>
-                  <p className="text-muted-foreground group-hover:text-foreground transition-colors">
+                  <h3 className="text-base font-bold text-foreground mb-1">{info.label}</h3>
+                  <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
                     {info.value}
                   </p>
                 </a>
@@ -200,13 +200,13 @@ const Contact = () => {
         </section>
 
         {/* Contact Form */}
-        <section className="py-20 border-b border-border">
+        <section className="py-12 border-b border-border">
           <div className="container mx-auto px-6 lg:px-20">
-            <h2 className="text-3xl font-bold mb-12 text-foreground">
+            <h2 className="text-2xl font-bold mb-8 text-foreground">
               <span className="text-muted-foreground">#</span>send-message
             </h2>
             <div className="max-w-2xl">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Name Field */}
                 <div>
                   <label htmlFor="name" className="block text-sm font-mono text-muted-foreground mb-2">
@@ -331,24 +331,24 @@ const Contact = () => {
         </section>
 
         {/* Social Links */}
-        <section className="py-20 border-b border-border">
+        <section className="py-12 border-b border-border">
           <div className="container mx-auto px-6 lg:px-20">
-            <h2 className="text-3xl font-bold mb-12 text-foreground">
+            <h2 className="text-2xl font-bold mb-8 text-foreground">
               <span className="text-muted-foreground">#</span>connect-socially
             </h2>
-            <div className="grid md:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-4 gap-4">
               {socialLinks.map((link, index) => (
                 <a
                   key={index}
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 px-6 py-4 border border-border rounded-lg hover:border-foreground/50 hover:bg-secondary transition-all group"
+                  className="flex items-center gap-3 px-4 py-3 border border-border rounded-lg hover:border-foreground/50 hover:bg-secondary transition-all group"
                 >
                   <div className="text-foreground group-hover:scale-110 transition-transform">
                     {link.icon}
                   </div>
-                  <span className="font-mono text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                  <span className="font-mono text-xs text-muted-foreground group-hover:text-foreground transition-colors">
                     {link.label}
                   </span>
                 </a>
@@ -358,24 +358,24 @@ const Contact = () => {
         </section>
 
         {/* Response Time */}
-        <section className="py-20">
+        <section className="py-12">
           <div className="container mx-auto px-6 lg:px-20 text-center">
-            <h2 className="text-3xl font-bold mb-6 text-foreground">Response Time</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+            <h2 className="text-2xl font-bold mb-4 text-foreground">Response Time</h2>
+            <p className="text-sm text-muted-foreground max-w-2xl mx-auto mb-6">
               I typically respond to messages within 24-48 hours. For urgent matters, feel free to reach out via email or phone.
             </p>
-            <div className="grid md:grid-cols-3 gap-8 max-w-2xl mx-auto">
-              <div className="border border-border rounded-lg p-6">
-                <div className="text-2xl font-bold text-foreground mb-2">24-48h</div>
-                <div className="text-muted-foreground text-sm">Email Response</div>
+            <div className="grid md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+              <div className="border border-border rounded-lg p-4">
+                <div className="text-xl font-bold text-foreground mb-1">24-48h</div>
+                <div className="text-muted-foreground text-xs">Email Response</div>
               </div>
-              <div className="border border-border rounded-lg p-6">
-                <div className="text-2xl font-bold text-foreground mb-2">1-2h</div>
-                <div className="text-muted-foreground text-sm">Phone Response</div>
+              <div className="border border-border rounded-lg p-4">
+                <div className="text-xl font-bold text-foreground mb-1">1-2h</div>
+                <div className="text-muted-foreground text-xs">Phone Response</div>
               </div>
-              <div className="border border-border rounded-lg p-6">
-                <div className="text-2xl font-bold text-foreground mb-2">Real-time</div>
-                <div className="text-muted-foreground text-sm">Social Media</div>
+              <div className="border border-border rounded-lg p-4">
+                <div className="text-xl font-bold text-foreground mb-1">Real-time</div>
+                <div className="text-muted-foreground text-xs">Social Media</div>
               </div>
             </div>
           </div>
