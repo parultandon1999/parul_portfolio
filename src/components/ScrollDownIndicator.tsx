@@ -20,7 +20,7 @@ const ScrollDownIndicator = () => {
 
   return (
     <div
-      className={`fixed bottom-8 z-40 animate-bounce transition-opacity duration-500 w-full flex justify-center ${
+      className={`fixed bottom-8 inset-x-0 z-40 animate-bounce transition-opacity duration-500 flex justify-center ${
         isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
     >
