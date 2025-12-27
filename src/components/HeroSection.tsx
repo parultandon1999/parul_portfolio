@@ -151,18 +151,16 @@ const HeroSection = () => {
               {/* Geometric frame - Hidden on mobile, shown on larger screens */}
               <div className="absolute -top-8 -left-8 w-48 sm:w-64 h-48 sm:h-64 border border-border hidden sm:block" />
               <div className="absolute -top-4 -left-4 w-48 sm:w-64 h-48 sm:h-64 border border-muted-foreground/30 hidden sm:block" />
-              
-              {/* Your profile image behind the chart */}
-              <div className="absolute -top-8 -left-8 w-48 sm:w-64 h-48 sm:h-64 hidden sm:block overflow-hidden rounded-lg">
-                <img 
-                  src="/pic.png" 
-                  alt="Profile" 
-                  className="w-full h-full object-cover opacity-90 pointer-events-none select-none"
-                  draggable={false}
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-              </div>
-              
+                {/* Your profile image behind the chart */}
+                <div className="absolute -top-4 -left-4 w-48 sm:w-64 h-48 sm:h-64 hidden sm:block overflow-hidden rounded-lg">
+                  <img 
+                    src="/pic.png" 
+                    alt="Profile" 
+                    className="w-full h-full object-contain opacity-90 pointer-events-none select-none"
+                    draggable={false}
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
+                </div>
               {/* Profile placeholder with data visualization aesthetic */}
               <div className="w-full sm:w-80 h-64 sm:h-96 bg-card rounded-lg overflow-hidden relative card-shadow border border-border mx-auto">
                 {/* Mini chart visualization inside profile */}

@@ -7,6 +7,10 @@ import SocialSidebar from '@/components/SocialSidebar';
 import Footer from '@/components/Footer';
 import { ArrowLeft, Save, RotateCcw, Download, Upload, Sun, Moon } from 'lucide-react';
 import { toast } from "@/lib/toast";
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 const AdminSettings = () => {
   const { isAuthenticated, isLoading } = useAdminAuth();
@@ -133,7 +137,7 @@ const AdminSettings = () => {
       <Navigation />
       <SocialSidebar />
       <main className="lg:pl-16">
-        {/* Header - EXCLUDED FROM CHANGES AS REQUESTED */}
+        {/* Header */}
         <section className="py-20 border-b border-border">
           <div className="container mx-auto px-6 lg:px-20">
             <h1 className="text-5xl md:text-6xl font-bold text-foreground">
@@ -143,29 +147,31 @@ const AdminSettings = () => {
           </div>
         </section>
 
-        {/* Tabs - Made slightly more compact */}
-        <section className="py-4 border-b border-border overflow-x-auto bg-background/50 backdrop-blur-sm sticky top-0 z-10">
+        {/* Tabs - Updated Styling & Removed Sticky */}
+        <section className="py-4 border-b border-border overflow-x-auto bg-background/50">
           <div className="container mx-auto px-6 lg:px-20">
-            <div className="flex gap-4 min-w-max">
-              {[
-                { id: 'theme', label: 'Theme' },
-                { id: 'site', label: 'Site Config' },
-                { id: 'admin', label: 'Admin' },
-                { id: 'data', label: 'Data' },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
-                  className={`px-4 py-2 font-mono text-sm transition-all rounded-md ${
-                    activeTab === tab.id
-                      ? 'text-background bg-foreground font-bold'
-                      : 'text-muted-foreground hover:bg-secondary/50'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+            <Tabs
+              value={activeTab}
+              onChange={(e, newValue) => setActiveTab(newValue)}
+              sx={{
+                minWidth: 'max-content',
+                '& .MuiTab-root': {
+                  fontFamily: 'monospace',
+                  fontSize: '0.875rem',
+                  textTransform: 'none',
+                  color: 'hsl(var(--muted-foreground))',
+                  '&.Mui-selected': {
+                    color: 'hsl(var(--foreground))',
+                    backgroundColor: 'hsl(var(--secondary))',
+                  },
+                },
+              }}
+            >
+              <Tab label="Theme" value="theme" />
+              <Tab label="Site Config" value="site" />
+              <Tab label="Admin" value="admin" />
+              <Tab label="Data" value="data" />
+            </Tabs>
           </div>
         </section>
 
@@ -189,22 +195,45 @@ const AdminSettings = () => {
             {/* Theme Tab */}
             {activeTab === 'theme' && (
               <div className="space-y-4">
-                {/* Main Action Buttons - Moved to top for easier access */}
-                <div className="flex gap-3 mb-6 sticky top-20 z-10 bg-background/80 backdrop-blur p-2 rounded-lg border border-border shadow-sm">
-                  <button
+                {/* Main Action Buttons */}
+                <div className="flex gap-3 mb-6 bg-background/80 backdrop-blur p-2 rounded-lg border border-border shadow-sm">
+                  <Button
+                    variant="contained"
                     onClick={handleSaveTheme}
-                    className="flex-1 px-4 py-2 bg-green-500 text-white rounded font-mono text-sm hover:bg-green-600 transition-colors flex items-center justify-center gap-2 shadow-sm"
+                    startIcon={<Save size={14} />}
+                    sx={{
+                      flex: 1,
+                      bgcolor: '#22c55e',
+                      color: 'white',
+                      fontFamily: 'monospace',
+                      textTransform: 'none',
+                      fontSize: '0.875rem',
+                      borderRadius: '8px',
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': { bgcolor: '#16a34a' }
+                    }}
                   >
-                    <Save size={14} />
                     Saved (Auto)
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="outlined"
                     onClick={handleResetTheme}
-                    className="flex-1 px-4 py-2 bg-red-500/10 border border-red-500/30 text-red-600 rounded font-mono text-sm hover:bg-red-500/20 transition-colors flex items-center justify-center gap-2"
+                    startIcon={<RotateCcw size={14} />}
+                    sx={{
+                      flex: 1,
+                      borderColor: 'rgba(239, 68, 68, 0.3)',
+                      color: '#dc2626',
+                      bgcolor: 'rgba(239, 68, 68, 0.1)',
+                      fontFamily: 'monospace',
+                      textTransform: 'none',
+                      fontSize: '0.875rem',
+                      borderRadius: '8px',
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': { bgcolor: 'rgba(239, 68, 68, 0.2)', borderColor: 'rgba(239, 68, 68, 0.5)' }
+                    }}
                   >
-                    <RotateCcw size={14} />
                     Reset
-                  </button>
+                  </Button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -326,7 +355,7 @@ const AdminSettings = () => {
                     )}
                     </div>
 
-                     {/* Go To Top */}
+                      {/* Go To Top */}
                     <div className="border border-border rounded-lg p-4 bg-secondary/30">
                         <div className="flex items-center justify-between mb-3">
                             <h3 className="text-sm font-bold text-foreground uppercase tracking-wider">Top Button</h3>
@@ -353,7 +382,7 @@ const AdminSettings = () => {
 
                 {/* Go To Top Styling (Conditional) */}
                 {themeForm.goToTopEnabled && (
-                     <div className="border border-border rounded-lg p-4 bg-secondary/30">
+                      <div className="border border-border rounded-lg p-4 bg-secondary/30">
                         <h3 className="text-sm font-bold text-foreground mb-3 uppercase tracking-wider">Button Styling</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {[
@@ -381,7 +410,7 @@ const AdminSettings = () => {
                                 </div>
                             ))}
                         </div>
-                     </div>
+                      </div>
                 )}
                 
                 {/* Theme Toggle Styling */}
@@ -419,7 +448,7 @@ const AdminSettings = () => {
                 <div className="border border-border rounded-lg p-4 bg-secondary/30">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-sm font-bold text-foreground flex items-center gap-2 uppercase tracking-wider">
-                       Dots Animation
+                        Dots Animation
                     </h3>
                     <input
                         type="checkbox"
@@ -480,7 +509,9 @@ const AdminSettings = () => {
                                                 <div className="flex items-center justify-between mb-2">
                                                     <span className="text-xs font-mono text-muted-foreground font-bold">Dot {index + 1}</span>
                                                     <div className="flex gap-2">
-                                                        <button
+                                                        <Button
+                                                            size="small"
+                                                            variant="outlined"
                                                             onClick={() => {
                                                                 const newDots = section.dots.filter((_, i) => i !== index);
                                                                 setThemeForm({
@@ -488,15 +519,43 @@ const AdminSettings = () => {
                                                                     dotsAnimation: { ...themeForm.dotsAnimation, [section.key]: newDots }
                                                                 });
                                                             }}
-                                                            className="text-xs px-2 py-1 bg-red-500/20 border border-red-500/50 text-red-500 rounded hover:bg-red-500 hover:text-white transition-colors"
+                                                            sx={{
+                                                                fontSize: '0.75rem',
+                                                                bgcolor: 'rgba(239, 68, 68, 0.2)',
+                                                                color: '#ef4444',
+                                                                borderColor: 'rgba(239, 68, 68, 0.5)',
+                                                                textTransform: 'none',
+                                                                minWidth: 'auto',
+                                                                px: 1,
+                                                                py: 0.5,
+                                                                borderRadius: '8px',
+                                                                fontFamily: 'monospace',
+                                                                transition: 'all 0.2s ease-in-out',
+                                                                '&:hover': { bgcolor: '#ef4444', color: 'white', borderColor: '#ef4444' }
+                                                            }}
                                                         >
                                                             Remove
-                                                        </button>
-                                                        <button
-                                                            className="text-xs px-2 py-1 bg-green-500/20 border border-green-500/50 text-green-600 rounded hover:bg-green-500 hover:text-white transition-colors"
+                                                        </Button>
+                                                        <Button
+                                                            size="small"
+                                                            variant="outlined"
+                                                            sx={{
+                                                                fontSize: '0.75rem',
+                                                                bgcolor: 'rgba(34, 197, 94, 0.2)',
+                                                                color: '#16a34a',
+                                                                borderColor: 'rgba(34, 197, 94, 0.5)',
+                                                                textTransform: 'none',
+                                                                minWidth: 'auto',
+                                                                px: 1,
+                                                                py: 0.5,
+                                                                borderRadius: '8px',
+                                                                fontFamily: 'monospace',
+                                                                transition: 'all 0.2s ease-in-out',
+                                                                '&:hover': { bgcolor: '#22c55e', color: 'white', borderColor: '#22c55e' }
+                                                            }}
                                                         >
                                                             Select
-                                                        </button>
+                                                        </Button>
                                                     </div>
                                                 </div>
                                                 <div className="grid grid-cols-3 gap-3">
@@ -526,7 +585,7 @@ const AdminSettings = () => {
                                             </div>
                                         ))}
                                     </div>
-                                    <button
+                                    <Button
                                         onClick={() => {
                                             setThemeForm({
                                                 ...themeForm,
@@ -536,10 +595,24 @@ const AdminSettings = () => {
                                                 }
                                             });
                                         }}
-                                        className="w-full px-3 py-2 bg-secondary border-2 border-dashed border-border rounded text-sm hover:bg-foreground hover:text-background hover:border-foreground transition-all"
+                                        fullWidth
+                                        sx={{
+                                            border: '2px dashed hsl(var(--border))',
+                                            color: 'hsl(var(--foreground))',
+                                            textTransform: 'none',
+                                            fontFamily: 'monospace',
+                                            bgcolor: 'hsl(var(--secondary))',
+                                            borderRadius: '8px',
+                                            transition: 'all 0.2s ease-in-out',
+                                            '&:hover': {
+                                                bgcolor: 'hsl(var(--foreground))',
+                                                color: 'hsl(var(--background))',
+                                                borderColor: 'hsl(var(--foreground))'
+                                            }
+                                        }}
                                     >
                                         + Add Dot Style
-                                    </button>
+                                    </Button>
                                 </div>
                             ))}
                         </div>
@@ -624,13 +697,25 @@ const AdminSettings = () => {
                   </div>
                 </div>
 
-                <button
+                <Button
+                  variant="contained"
                   onClick={handleSaveSiteConfig}
-                  className="w-full px-4 py-3 bg-green-500 text-white rounded font-mono hover:bg-green-600 transition-colors flex items-center justify-center gap-2 text-sm shadow-md"
+                  startIcon={<Save size={16} />}
+                  fullWidth
+                  sx={{
+                    bgcolor: '#22c55e',
+                    color: 'white',
+                    fontFamily: 'monospace',
+                    textTransform: 'none',
+                    fontSize: '0.875rem',
+                    padding: '12px',
+                    borderRadius: '8px',
+                    transition: 'all 0.2s ease-in-out',
+                    '&:hover': { bgcolor: '#16a34a' }
+                  }}
                 >
-                  <Save size={16} />
                   Saved (Auto)
-                </button>
+                </Button>
               </div>
             )}
 
@@ -661,18 +746,30 @@ const AdminSettings = () => {
                       <span className="text-sm font-mono">Enable Two-Factor Authentication</span>
                     </label>
                     <div className="text-xs text-muted-foreground pt-2 border-t border-border">
-                       Last Password Change: {new Date(adminForm.lastPasswordChange).toLocaleDateString()}
+                        Last Password Change: {new Date(adminForm.lastPasswordChange).toLocaleDateString()}
                     </div>
                   </div>
                 </div>
 
-                <button
+                <Button
+                  variant="contained"
                   onClick={handleSaveAdminPrefs}
-                  className="w-full px-4 py-3 bg-green-500 text-white rounded font-mono hover:bg-green-600 transition-colors flex items-center justify-center gap-2 text-sm shadow-md"
+                  startIcon={<Save size={16} />}
+                  fullWidth
+                  sx={{
+                    bgcolor: '#22c55e',
+                    color: 'white',
+                    fontFamily: 'monospace',
+                    textTransform: 'none',
+                    fontSize: '0.875rem',
+                    padding: '12px',
+                    borderRadius: '8px',
+                    transition: 'all 0.2s ease-in-out',
+                    '&:hover': { bgcolor: '#16a34a' }
+                  }}
                 >
-                  <Save size={16} />
                   Saved (Auto)
-                </button>
+                </Button>
               </div>
             )}
 
@@ -682,20 +779,45 @@ const AdminSettings = () => {
                 <div className="border border-border rounded-lg p-4 bg-secondary/30">
                   <h3 className="text-sm font-bold text-foreground mb-4 uppercase tracking-wider">Backup</h3>
                   <p className="text-xs text-muted-foreground mb-4">Export all settings as JSON.</p>
-                  <button
+                  <Button
+                    variant="contained"
                     onClick={handleExportData}
-                    className="w-full px-4 py-2 bg-blue-500 text-white rounded font-mono hover:bg-blue-600 transition-colors flex items-center justify-center gap-2 text-sm"
+                    startIcon={<Download size={14} />}
+                    fullWidth
+                    sx={{
+                      bgcolor: '#3b82f6',
+                      color: 'white',
+                      fontFamily: 'monospace',
+                      textTransform: 'none',
+                      fontSize: '0.875rem',
+                      borderRadius: '8px',
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': { bgcolor: '#2563eb' }
+                    }}
                   >
-                    <Download size={14} />
                     Export
-                  </button>
+                  </Button>
                 </div>
 
                 <div className="border border-border rounded-lg p-4 bg-secondary/30">
                   <h3 className="text-sm font-bold text-foreground mb-4 uppercase tracking-wider">Restore</h3>
                   <p className="text-xs text-muted-foreground mb-4">Import settings from JSON.</p>
-                  <label className="w-full px-4 py-2 bg-purple-500 text-white rounded font-mono hover:bg-purple-600 transition-colors flex items-center justify-center gap-2 cursor-pointer text-sm">
-                    <Upload size={14} />
+                  <Button
+                    component="label"
+                    variant="contained"
+                    startIcon={<Upload size={14} />}
+                    fullWidth
+                    sx={{
+                      bgcolor: '#a855f7',
+                      color: 'white',
+                      fontFamily: 'monospace',
+                      textTransform: 'none',
+                      fontSize: '0.875rem',
+                      borderRadius: '8px',
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': { bgcolor: '#9333ea' }
+                    }}
+                  >
                     Import
                     <input
                       type="file"
@@ -703,7 +825,7 @@ const AdminSettings = () => {
                       onChange={handleImportData}
                       className="hidden"
                     />
-                  </label>
+                  </Button>
                 </div>
 
                 <div className="border border-border rounded-lg p-4 bg-secondary/30 md:col-span-2">
@@ -713,11 +835,11 @@ const AdminSettings = () => {
                         <span className="block font-bold mb-1">Size</span>
                         ~{(JSON.stringify(settingsData).length / 1024).toFixed(2)} KB
                     </div>
-                     <div className="p-2 bg-background/50 rounded">
+                      <div className="p-2 bg-background/50 rounded">
                         <span className="block font-bold mb-1">Status</span>
                         Local Storage
                     </div>
-                     <div className="p-2 bg-background/50 rounded">
+                      <div className="p-2 bg-background/50 rounded">
                         <span className="block font-bold mb-1">Backup</span>
                         Pending
                     </div>

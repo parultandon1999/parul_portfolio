@@ -5,7 +5,12 @@ import { useSkills, SkillCategory, Skill, Certification } from '@/context/Skills
 import Navigation from '@/components/Navigation';
 import SocialSidebar from '@/components/SocialSidebar';
 import Footer from '@/components/Footer';
-import { ArrowLeft, Plus, Edit2, Trash2, X, Save } from 'lucide-react';
+import { ArrowLeft, Plus, Edit2, Trash2, X, Save, Check } from 'lucide-react';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
 
 const AdminSkills = () => {
   const { isAuthenticated, isLoading } = useAdminAuth();
@@ -70,12 +75,6 @@ const AdminSkills = () => {
     } else if (deleteConfirm.type === 'cert') {
       deleteCertification(deleteConfirm.id);
     } else if (deleteConfirm.type === 'skill') {
-        // Need to find which category contains this skill to delete it
-        // The context deleteSkill function might need categoryId, 
-        // strictly speaking based on context usually provided, deleteSkill takes (catId, skillId).
-        // Since we only stored skillId in deleteConfirm, we might need to iterate.
-        // However, assuming the context handles it or we pass it:
-        // Let's safe guard. Ideally we should store catId in deleteConfirm for skills.
         skillsData.categories.forEach(cat => {
             if(cat.skills.find(s => s.id === deleteConfirm.id)) {
                 deleteSkill(cat.id, deleteConfirm.id);
@@ -90,7 +89,7 @@ const AdminSkills = () => {
       <Navigation />
       <SocialSidebar />
       <main className="lg:pl-16">
-        {/* Header - EXCLUDED FROM CHANGES */}
+        {/* Header */}
         <section className="py-20 border-b border-border">
           <div className="container mx-auto px-6 lg:px-20">
             <h1 className="text-5xl md:text-6xl font-bold text-foreground">
@@ -99,51 +98,40 @@ const AdminSkills = () => {
           </div>
         </section>
 
-        {/* Tabs - Compact & Sticky */}
+        {/* Tabs */}
         <section className="py-4 border-b border-border overflow-x-auto bg-background/50 backdrop-blur-sm sticky top-0 z-10">
           <div className="container mx-auto px-6 lg:px-20">
-            <div className="flex gap-4 min-w-max">
-              <button
-                onClick={() => setActiveTab('categories')}
-                className={`px-4 py-2 font-mono text-sm transition-all rounded-md ${
-                  activeTab === 'categories'
-                    ? 'text-background bg-foreground font-bold'
-                    : 'text-muted-foreground hover:bg-secondary/50'
-                }`}
-              >
-                Skill Categories
-              </button>
-              <button
-                onClick={() => setActiveTab('certifications')}
-                className={`px-4 py-2 font-mono text-sm transition-all rounded-md ${
-                  activeTab === 'certifications'
-                    ? 'text-background bg-foreground font-bold'
-                    : 'text-muted-foreground hover:bg-secondary/50'
-                }`}
-              >
-                Certifications
-              </button>
-              <button
-                onClick={() => setActiveTab('summary')}
-                className={`px-4 py-2 font-mono text-sm transition-all rounded-md ${
-                  activeTab === 'summary'
-                    ? 'text-background bg-foreground font-bold'
-                    : 'text-muted-foreground hover:bg-secondary/50'
-                }`}
-              >
-                Summary Stats
-              </button>
-            </div>
+            <Tabs
+              value={activeTab}
+              onChange={(e, newValue) => setActiveTab(newValue)}
+              sx={{
+                minWidth: 'max-content',
+                '& .MuiTab-root': {
+                  fontFamily: 'monospace',
+                  fontSize: '0.875rem',
+                  textTransform: 'none',
+                  color: 'hsl(var(--muted-foreground))',
+                  '&.Mui-selected': {
+                    color: 'hsl(var(--foreground))',
+                    backgroundColor: 'hsl(var(--secondary))',
+                  },
+                },
+              }}
+            >
+              <Tab label="Skill Categories" value="categories" />
+              <Tab label="Certifications" value="certifications" />
+              <Tab label="Summary" value="summary" />
+            </Tabs>
           </div>
         </section>
 
-        {/* Content - Optimized for Density */}
+        {/* Content */}
         <section className="py-8">
           <div className="container mx-auto px-6 lg:px-20 max-w-5xl">
             {/* Skill Categories Tab */}
             {activeTab === 'categories' && (
               <div className="space-y-6">
-                {/* Add Category Form - Compact Grid */}
+                {/* Add Category Form */}
                 <div className="border border-border rounded-lg p-4 bg-secondary/30">
                   <h3 className="text-sm font-bold text-foreground mb-3 uppercase tracking-wider">
                     {editingCategoryId ? 'Edit Category' : 'Add New Category'}
@@ -170,23 +158,39 @@ const AdminSkills = () => {
                         />
                     </div>
                     <div className="md:col-span-2 flex gap-2">
-                      <button
+                      <Button
+                        variant="contained"
                         onClick={handleSaveCategory}
-                        className="flex-1 px-3 py-2 bg-green-500 text-white rounded font-mono text-sm hover:bg-green-600 flex items-center justify-center gap-2 h-[38px]"
+                        startIcon={<Save size={14} />}
+                        fullWidth
+                        sx={{
+                            bgcolor: '#22c55e', 
+                            '&:hover': { bgcolor: '#16a34a' },
+                            fontFamily: 'monospace',
+                            textTransform: 'none',
+                            fontSize: '0.875rem',
+                            height: '38px'
+                        }}
                       >
-                        <Save size={14} />
                         {editingCategoryId ? 'Save' : 'Add'}
-                      </button>
+                      </Button>
+                      
                       {editingCategoryId && (
-                        <button
+                        <IconButton
                           onClick={() => {
                             setEditingCategoryId(null);
                             setCategoryForm({ id: '', category: '', description: '', skills: [] });
                           }}
-                          className="px-3 py-2 border border-border text-foreground rounded font-mono hover:bg-secondary h-[38px]"
+                          sx={{ 
+                              border: '1px solid hsl(var(--border))', 
+                              borderRadius: 1,
+                              color: 'hsl(var(--foreground))',
+                              height: '38px',
+                              width: '38px'
+                          }}
                         >
                           <X size={14} />
-                        </button>
+                        </IconButton>
                       )}
                     </div>
                   </div>
@@ -204,23 +208,35 @@ const AdminSkills = () => {
                           </span>
                         </div>
                         <div className="flex gap-2">
-                          <button
+                          <IconButton
                             onClick={() => {
                               setEditingCategoryId(category.id);
                               setCategoryForm(category);
                             }}
-                            className="p-1.5 bg-blue-500/10 border border-blue-500/20 text-blue-600 rounded hover:bg-blue-500/20"
-                            title="Edit Category"
+                            size="small"
+                            sx={{ 
+                                bgcolor: 'rgba(59, 130, 246, 0.1)', 
+                                border: '1px solid rgba(59, 130, 246, 0.2)',
+                                color: '#2563eb',
+                                borderRadius: 1,
+                                '&:hover': { bgcolor: 'rgba(59, 130, 246, 0.2)' }
+                            }}
                           >
                             <Edit2 size={14} />
-                          </button>
-                          <button
+                          </IconButton>
+                          <IconButton
                             onClick={() => setDeleteConfirm({ id: category.id, type: 'category' })}
-                            className="p-1.5 bg-red-500/10 border border-red-500/20 text-red-600 rounded hover:bg-red-500/20"
-                            title="Delete Category"
+                            size="small"
+                            sx={{ 
+                                bgcolor: 'rgba(239, 68, 68, 0.1)', 
+                                border: '1px solid rgba(239, 68, 68, 0.2)',
+                                color: '#dc2626',
+                                borderRadius: 1,
+                                '&:hover': { bgcolor: 'rgba(239, 68, 68, 0.2)' }
+                            }}
                           >
                             <Trash2 size={14} />
-                          </button>
+                          </IconButton>
                         </div>
                       </div>
 
@@ -228,16 +244,26 @@ const AdminSkills = () => {
                       <div>
                         <div className="flex items-center justify-between mb-2">
                           <p className="text-xs font-mono font-bold text-muted-foreground uppercase">Skills ({category.skills.length})</p>
-                          <button
+                          <Button
+                            variant="outlined"
+                            size="small"
                             onClick={() => {
                               setSkillForm({ id: '', name: '', proficiency: 50, experience: '', description: '' });
                               setEditingSkillId(`new-${category.id}`);
                             }}
-                            className="px-2 py-1 bg-green-500/10 border border-green-500/20 text-green-600 rounded text-xs font-mono hover:bg-green-500/20 flex items-center gap-1"
+                            startIcon={<Plus size={10} />}
+                            sx={{
+                                borderColor: 'rgba(22, 163, 74, 0.2)',
+                                color: '#16a34a',
+                                bgcolor: 'rgba(22, 163, 74, 0.1)',
+                                fontFamily: 'monospace',
+                                fontSize: '0.75rem',
+                                textTransform: 'none',
+                                '&:hover': { bgcolor: 'rgba(22, 163, 74, 0.2)', borderColor: '#16a34a' }
+                            }}
                           >
-                            <Plus size={10} />
                             Add Skill
-                          </button>
+                          </Button>
                         </div>
 
                         {/* Inline Add/Edit Skill Form */}
@@ -285,8 +311,40 @@ const AdminSkills = () => {
                                    />
                                 </div>
                                 <div className="md:col-span-2 flex gap-1">
-                                   <button onClick={() => handleSaveSkill(category.id)} className="flex-1 bg-green-500 text-white rounded text-xs py-1.5 hover:bg-green-600">Save</button>
-                                   <button onClick={() => setEditingSkillId(null)} className="flex-1 bg-secondary border border-border rounded text-xs py-1.5 hover:bg-muted">Cancel</button>
+                                  <Button
+                                    variant="contained"
+                                    size="small"
+                                    onClick={() => handleSaveSkill(category.id)}
+                                    startIcon={<Check size={14} />}
+                                    sx={{
+                                      flex: 1,
+                                      bgcolor: '#22c55e',
+                                      color: 'white',
+                                      fontFamily: 'monospace',
+                                      textTransform: 'none',
+                                      fontSize: '0.75rem',
+                                      '&:hover': { bgcolor: '#16a34a' },
+                                    }}
+                                  >
+                                    Save
+                                  </Button>
+                                  <Button
+                                    variant="outlined"
+                                    size="small"
+                                    onClick={() => setEditingSkillId(null)}
+                                    startIcon={<X size={14} />}
+                                    sx={{
+                                      flex: 1,
+                                      borderColor: 'hsl(var(--border))',
+                                      color: 'hsl(var(--foreground))',
+                                      fontFamily: 'monospace',
+                                      textTransform: 'none',
+                                      fontSize: '0.75rem',
+                                      '&:hover': { bgcolor: 'hsl(var(--secondary))', borderColor: 'hsl(var(--foreground))' },
+                                    }}
+                                  >
+                                    Cancel
+                                  </Button>
                                 </div>
                              </div>
                            </div>
@@ -295,11 +353,11 @@ const AdminSkills = () => {
                         {/* Skills Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
                           {category.skills.map((skill) => {
-                             // Don't show the skill being edited in the list if it's being edited inline
                              if (editingSkillId === skill.id) {
                                 return (
                                     <div key={skill.id} className="bg-secondary/40 rounded p-3 border border-border border-blue-500/50 col-span-full">
                                         <div className="grid grid-cols-1 md:grid-cols-12 gap-2 items-end">
+                                            {/* ... Inputs identical to above form ... */}
                                             <div className="md:col-span-3">
                                                 <label className="text-[10px] uppercase text-muted-foreground">Name</label>
                                                 <input
@@ -337,8 +395,35 @@ const AdminSkills = () => {
                                                 />
                                             </div>
                                             <div className="md:col-span-2 flex gap-1">
-                                                <button onClick={() => handleSaveSkill(category.id)} className="flex-1 bg-green-500 text-white rounded text-xs py-1.5 hover:bg-green-600">Save</button>
-                                                <button onClick={() => setEditingSkillId(null)} className="flex-1 bg-secondary border border-border rounded text-xs py-1.5 hover:bg-muted">Cancel</button>
+                                                <Button 
+                                                    variant="contained"
+                                                    size="small"
+                                                    onClick={() => handleSaveSkill(category.id)}
+                                                    sx={{ 
+                                                        flex: 1, 
+                                                        bgcolor: '#22c55e', 
+                                                        fontSize: '0.75rem', 
+                                                        fontFamily: 'monospace',
+                                                        '&:hover': { bgcolor: '#16a34a' } 
+                                                    }}
+                                                >
+                                                    Save
+                                                </Button>
+                                                <Button 
+                                                    variant="outlined"
+                                                    size="small"
+                                                    onClick={() => setEditingSkillId(null)}
+                                                    sx={{ 
+                                                        flex: 1, 
+                                                        borderColor: 'hsl(var(--border))', 
+                                                        color: 'hsl(var(--foreground))',
+                                                        fontSize: '0.75rem', 
+                                                        fontFamily: 'monospace',
+                                                        '&:hover': { bgcolor: 'hsl(var(--secondary))' } 
+                                                    }}
+                                                >
+                                                    Cancel
+                                                </Button>
                                             </div>
                                         </div>
                                     </div>
@@ -354,21 +439,31 @@ const AdminSkills = () => {
                                         <p className="text-[10px] text-muted-foreground truncate">{skill.experience} {skill.description ? `• ${skill.description}` : ''}</p>
                                     </div>
                                     <div className="flex gap-1 pl-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button
-                                        onClick={() => {
-                                            setEditingSkillId(skill.id);
-                                            setSkillForm(skill);
-                                        }}
-                                        className="p-1 text-blue-500 hover:bg-blue-500/10 rounded"
+                                        <IconButton
+                                          onClick={() => {
+                                              setEditingSkillId(skill.id);
+                                              setSkillForm(skill);
+                                          }}
+                                          size="small"
+                                          sx={{ 
+                                              color: '#3b82f6', 
+                                              padding: '4px',
+                                              '&:hover': { bgcolor: 'rgba(59, 130, 246, 0.1)' } 
+                                          }}
                                         >
                                             <Edit2 size={12} />
-                                        </button>
-                                        <button
-                                        onClick={() => setDeleteConfirm({ id: skill.id, type: 'skill' })}
-                                        className="p-1 text-red-500 hover:bg-red-500/10 rounded"
+                                        </IconButton>
+                                        <IconButton
+                                          onClick={() => setDeleteConfirm({ id: skill.id, type: 'skill' })}
+                                          size="small"
+                                          sx={{ 
+                                              color: '#ef4444', 
+                                              padding: '4px',
+                                              '&:hover': { bgcolor: 'rgba(239, 68, 68, 0.1)' } 
+                                          }}
                                         >
                                             <Trash2 size={12} />
-                                        </button>
+                                        </IconButton>
                                     </div>
                                 </div>
                              )
@@ -421,23 +516,39 @@ const AdminSkills = () => {
                         />
                     </div>
                     <div className="md:col-span-2 flex gap-2">
-                      <button
+                      <Button
+                        variant="contained"
                         onClick={handleSaveCert}
-                        className="flex-1 px-3 py-2 bg-green-500 text-white rounded font-mono text-sm hover:bg-green-600 flex items-center justify-center gap-2 h-[38px]"
+                        startIcon={<Save size={14} />}
+                        fullWidth
+                        sx={{
+                            bgcolor: '#22c55e', 
+                            '&:hover': { bgcolor: '#16a34a' },
+                            fontFamily: 'monospace',
+                            textTransform: 'none',
+                            fontSize: '0.875rem',
+                            height: '38px'
+                        }}
                       >
-                        <Save size={14} />
                         {editingCertId ? 'Save' : 'Add'}
-                      </button>
+                      </Button>
+                      
                       {editingCertId && (
-                         <button
+                        <IconButton
                             onClick={() => {
                             setEditingCertId(null);
                             setCertForm({ id: '', title: '', issuer: '', year: '' });
                             }}
-                            className="px-3 py-2 border border-border text-foreground rounded font-mono hover:bg-secondary h-[38px]"
-                         >
+                            sx={{ 
+                              border: '1px solid hsl(var(--border))', 
+                              borderRadius: 1,
+                              color: 'hsl(var(--foreground))',
+                              height: '38px',
+                              width: '38px'
+                            }}
+                        >
                             <X size={14} />
-                         </button>
+                        </IconButton>
                       )}
                     </div>
                   </div>
@@ -454,21 +565,35 @@ const AdminSkills = () => {
                           <p className="text-[10px] font-mono text-muted-foreground mt-1 bg-secondary/50 inline-block px-1.5 rounded">{cert.year}</p>
                         </div>
                         <div className="flex flex-col gap-1">
-                          <button
+                          <IconButton
                             onClick={() => {
                               setEditingCertId(cert.id);
                               setCertForm(cert);
                             }}
-                            className="p-1.5 bg-blue-500/10 border border-blue-500/20 text-blue-600 rounded hover:bg-blue-500/20"
+                            size="small"
+                            sx={{ 
+                                bgcolor: 'rgba(59, 130, 246, 0.1)', 
+                                border: '1px solid rgba(59, 130, 246, 0.2)',
+                                color: '#2563eb',
+                                borderRadius: 1,
+                                '&:hover': { bgcolor: 'rgba(59, 130, 246, 0.2)' }
+                            }}
                           >
                             <Edit2 size={12} />
-                          </button>
-                          <button
+                          </IconButton>
+                          <IconButton
                             onClick={() => setDeleteConfirm({ id: cert.id, type: 'cert' })}
-                            className="p-1.5 bg-red-500/10 border border-red-500/20 text-red-600 rounded hover:bg-red-500/20"
+                            size="small"
+                            sx={{ 
+                                bgcolor: 'rgba(239, 68, 68, 0.1)', 
+                                border: '1px solid rgba(239, 68, 68, 0.2)',
+                                color: '#dc2626',
+                                borderRadius: 1,
+                                '&:hover': { bgcolor: 'rgba(239, 68, 68, 0.2)' }
+                            }}
                           >
                             <Trash2 size={12} />
-                          </button>
+                          </IconButton>
                         </div>
                       </div>
                     </div>
@@ -521,13 +646,22 @@ const AdminSkills = () => {
                     />
                   </div>
                   <div className="sm:col-span-2 lg:col-span-4 mt-2">
-                      <button
+                      <Button
+                        variant="contained"
                         onClick={handleSaveSummary}
-                        className="w-full px-4 py-2 bg-green-500 text-white rounded font-mono hover:bg-green-600 flex items-center justify-center gap-2 text-sm"
+                        startIcon={<Save size={14} />}
+                        fullWidth
+                        sx={{
+                            bgcolor: '#22c55e', 
+                            '&:hover': { bgcolor: '#16a34a' },
+                            fontFamily: 'monospace',
+                            textTransform: 'none',
+                            fontSize: '0.875rem',
+                            padding: '8px'
+                        }}
                       >
-                        <Save size={14} />
                         Save Summary
-                      </button>
+                      </Button>
                   </div>
                 </div>
               </div>
@@ -548,18 +682,32 @@ const AdminSkills = () => {
                   : 'This certification will be removed permanently.'}
               </p>
               <div className="flex gap-3">
-                <button
+                <Button
+                  variant="outlined"
                   onClick={() => setDeleteConfirm(null)}
-                  className="flex-1 px-3 py-2 border border-border text-foreground rounded font-mono text-sm hover:bg-secondary transition-colors"
+                  fullWidth
+                  sx={{
+                    borderColor: 'hsl(var(--border))', 
+                    color: 'hsl(var(--foreground))',
+                    fontFamily: 'monospace',
+                    textTransform: 'none',
+                    '&:hover': { borderColor: 'hsl(var(--foreground))', bgcolor: 'hsl(var(--secondary))' }
+                  }}
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="contained"
                   onClick={confirmDelete}
-                  className="flex-1 px-3 py-2 bg-red-500 text-white rounded font-mono text-sm hover:bg-red-600 transition-colors"
+                  fullWidth
+                  color="error"
+                  sx={{
+                    fontFamily: 'monospace',
+                    textTransform: 'none'
+                  }}
                 >
                   Delete
-                </button>
+                </Button>
               </div>
             </div>
           </div>

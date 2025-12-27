@@ -1,7 +1,18 @@
 import { useState, useEffect } from 'react';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Box from '@mui/material/Box';
+import Collapse from '@mui/material/Collapse';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import { Menu, X } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import AdminAccessMenu from './AdminAccessMenu';
-import { Menu, X } from 'lucide-react';
 
 const Navigation = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -24,67 +35,123 @@ const Navigation = () => {
   ];
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-background/20 backdrop-blur-sm border-b border-border' : ''
-      }`}
+    <AppBar 
+      position="fixed" 
+      elevation={0}
+      sx={{
+        backgroundColor: scrolled || mobileMenuOpen ? 'hsl(var(--background) / 0.95)' : 'transparent',
+        backdropFilter: scrolled || mobileMenuOpen ? 'blur(8px)' : 'none',
+        borderBottom: scrolled || mobileMenuOpen ? '1px solid hsl(var(--border))' : 'none',
+        transition: 'all 0.3s ease-in-out',
+        color: 'hsl(var(--foreground))',
+        backgroundImage: 'none', // Resets default MUI gradient
+      }}
     >
-      <div className="container mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-        <AdminAccessMenu>
-          <a href="/" className="font-mono text-lg sm:text-xl font-bold flex items-center gap-1 sm:gap-2">
-            <span className="text-muted-foreground text-sm sm:text-base">&lt;</span>
-            <span className="text-foreground text-sm sm:text-base">DS</span>
-            <span className="text-muted-foreground text-sm sm:text-base">/&gt;</span>
-          </a>
-        </AdminAccessMenu>
-
-        <div className="hidden md:flex items-center gap-6 sm:gap-8">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="font-mono text-xs sm:text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
+      <Container maxWidth={false} sx={{ px: { xs: 2, sm: 3, md: 8 } }}>
+        <Toolbar disableGutters sx={{ justifyContent: 'space-between', minHeight: { xs: '64px', md: '80px' } }}>
+          
+          {/* Logo Section */}
+          <AdminAccessMenu>
+            <Box 
+              component="a" 
+              href="/" 
+              sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 1, 
+                textDecoration: 'none', 
+                color: 'inherit',
+                '&:hover': { opacity: 0.9 }
+              }}
             >
-              {link.label}
-            </a>
-          ))}
-          <ThemeToggle />
-        </div>
+              <Box component="span" sx={{ fontFamily: 'monospace', color: 'hsl(var(--muted-foreground))', fontSize: { xs: '0.875rem', sm: '1rem' } }}>&lt;</Box>
+              <Box component="span" sx={{ fontFamily: 'monospace', fontWeight: 'bold', fontSize: { xs: '1.125rem', sm: '1.25rem' } }}>DS</Box>
+              <Box component="span" sx={{ fontFamily: 'monospace', color: 'hsl(var(--muted-foreground))', fontSize: { xs: '0.875rem', sm: '1rem' } }}>/&gt;</Box>
+            </Box>
+          </AdminAccessMenu>
 
-        <div className="md:hidden flex items-center gap-2">
-          <ThemeToggle />
-          <button 
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="text-foreground p-2"
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-background/95 backdrop-blur-sm border-b border-border">
-          <div className="container mx-auto px-4 py-4 space-y-3">
+          {/* Desktop Navigation */}
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 4 }}>
             {navLinks.map((link) => (
-              <a
+              <Button
                 key={link.href}
                 href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="block font-mono text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
+                sx={{
+                  fontFamily: 'monospace',
+                  textTransform: 'none',
+                  fontSize: '0.875rem',
+                  color: 'hsl(var(--foreground))',
+                  opacity: 0.7,
+                  '&:hover': {
+                    opacity: 1,
+                    backgroundColor: 'transparent',
+                    color: 'hsl(var(--foreground))' 
+                  },
+                  transition: 'opacity 0.2s',
+                  minWidth: 'auto',
+                  padding: 0,
+                }}
               >
                 {link.label}
-              </a>
+              </Button>
             ))}
-          </div>
-        </div>
-      )}
-    </nav>
+            <Box sx={{ ml: 1 }}>
+              <ThemeToggle />
+            </Box>
+          </Box>
+
+          {/* Mobile Menu Button */}
+          <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', gap: 1 }}>
+            <ThemeToggle />
+            <IconButton
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              sx={{ color: 'hsl(var(--foreground))' }}
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </Container>
+
+      {/* Mobile Menu Collapse */}
+      <Collapse in={mobileMenuOpen} timeout="auto" unmountOnExit>
+        <Box 
+            sx={{ 
+                bgcolor: 'hsl(var(--background))', 
+                borderTop: '1px solid hsl(var(--border))',
+                px: 2,
+                pb: 2
+            }}
+        >
+            <List>
+                {navLinks.map((link) => (
+                    <ListItem key={link.href} disablePadding>
+                        <ListItemButton 
+                            component="a" 
+                            href={link.href}
+                            onClick={() => setMobileMenuOpen(false)}
+                            sx={{
+                                borderRadius: 1,
+                                '&:hover': { backgroundColor: 'hsl(var(--secondary))' }
+                            }}
+                        >
+                            <ListItemText 
+                                primary={link.label} 
+                                primaryTypographyProps={{
+                                    fontFamily: 'monospace',
+                                    fontSize: '0.875rem',
+                                    color: 'hsl(var(--muted-foreground))',
+                                    fontWeight: 500
+                                }}
+                            />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+        </Box>
+      </Collapse>
+    </AppBar>
   );
 };
 

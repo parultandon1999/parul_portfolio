@@ -6,6 +6,9 @@ import Navigation from '@/components/Navigation';
 import SocialSidebar from '@/components/SocialSidebar';
 import Footer from '@/components/Footer';
 import { ArrowLeft, Save } from 'lucide-react';
+import Button from '@mui/material/Button';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 const AdminContent = () => {
   const { isAuthenticated, isLoading } = useAdminAuth();
@@ -38,24 +41,33 @@ const AdminContent = () => {
           </div>
         </section>
 
-        {/* Tabs - Sticky & Compact */}
-        <section className="py-4 border-b border-border overflow-x-auto bg-background/50 backdrop-blur-sm sticky top-0 z-10">
+        {/* Tabs - Styled with Material UI (Not Sticky) */}
+        <section className="py-4 border-b border-border overflow-x-auto bg-background/50">
           <div className="container mx-auto px-6 lg:px-20">
-            <div className="flex gap-4 min-w-max">
-              {['navigation', 'pages', 'footer'].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab as any)}
-                  className={`px-4 py-2 font-mono text-sm transition-all rounded-md ${
-                    activeTab === tab 
-                      ? 'text-background bg-foreground font-bold' 
-                      : 'text-muted-foreground hover:bg-secondary/50'
-                  }`}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </button>
-              ))}
-            </div>
+            <Tabs
+              value={activeTab}
+              onChange={(e, newValue) => setActiveTab(newValue)}
+              sx={{
+                minWidth: 'max-content',
+                '& .MuiTab-root': {
+                  fontFamily: 'monospace',
+                  fontSize: '0.875rem',
+                  textTransform: 'none',
+                  color: 'hsl(var(--muted-foreground))',
+                  '&.Mui-selected': {
+                    color: 'hsl(var(--foreground))',
+                    backgroundColor: 'hsl(var(--secondary))',
+                  },
+                },
+                '& .MuiTabs-indicator': {
+                  backgroundColor: 'hsl(var(--foreground))',
+                },
+              }}
+            >
+              <Tab label="Navigation" value="navigation" />
+              <Tab label="Pages" value="pages" />
+              <Tab label="Footer" value="footer" />
+            </Tabs>
           </div>
         </section>
 
@@ -68,12 +80,21 @@ const AdminContent = () => {
               <div className="border border-border rounded-lg p-4 bg-secondary/30">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-sm font-bold text-foreground uppercase tracking-wider">Navigation Links</h3>
-                  <button 
+                  <Button 
+                    variant="contained"
                     onClick={() => updateNavigation(navForm)} 
-                    className="px-3 py-1.5 bg-green-500 text-white rounded font-mono text-xs hover:bg-green-600 flex items-center gap-2"
+                    startIcon={<Save size={14} />}
+                    sx={{
+                      bgcolor: '#22c55e',
+                      color: 'white',
+                      fontFamily: 'monospace',
+                      textTransform: 'none',
+                      fontSize: '0.75rem',
+                      '&:hover': { bgcolor: '#16a34a' }
+                    }}
                   >
-                    <Save size={12} /> Save Changes
-                  </button>
+                    Save Changes
+                  </Button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {Object.entries(navForm).map(([key, value]) => (
@@ -98,12 +119,23 @@ const AdminContent = () => {
                   <div key={page} className="border border-border rounded-lg p-4 bg-secondary/30 flex flex-col h-full">
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-sm font-bold text-foreground uppercase tracking-wider">{page} Page</h3>
-                      <button 
+                      <Button 
+                        variant="contained"
                         onClick={() => updatePageContent(page as any, content as any)} 
-                        className="px-3 py-1.5 bg-green-500 text-white rounded font-mono text-xs hover:bg-green-600 flex items-center gap-2"
+                        startIcon={<Save size={14} />}
+                        sx={{
+                          bgcolor: '#22c55e',
+                          color: 'white',
+                          fontFamily: 'monospace',
+                          textTransform: 'none',
+                          fontSize: '0.75rem',
+                          minWidth: 'auto',
+                          padding: '6px 12px',
+                          '&:hover': { bgcolor: '#16a34a' }
+                        }}
                       >
-                        <Save size={12} /> Save
-                      </button>
+                        Save
+                      </Button>
                     </div>
                     <div className="space-y-4 flex-1">
                       <div>
@@ -135,12 +167,21 @@ const AdminContent = () => {
               <div className="border border-border rounded-lg p-4 bg-secondary/30">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-sm font-bold text-foreground uppercase tracking-wider">Footer Content</h3>
-                  <button 
+                  <Button 
+                    variant="contained"
                     onClick={() => updateFooter(footerForm)} 
-                    className="px-3 py-1.5 bg-green-500 text-white rounded font-mono text-xs hover:bg-green-600 flex items-center gap-2"
+                    startIcon={<Save size={14} />}
+                    sx={{
+                      bgcolor: '#22c55e',
+                      color: 'white',
+                      fontFamily: 'monospace',
+                      textTransform: 'none',
+                      fontSize: '0.75rem',
+                      '&:hover': { bgcolor: '#16a34a' }
+                    }}
                   >
-                    <Save size={12} /> Save Changes
-                  </button>
+                    Save Changes
+                  </Button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
