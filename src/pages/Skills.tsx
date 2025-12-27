@@ -3,6 +3,7 @@ import SocialSidebar from '@/components/SocialSidebar';
 import Footer from '@/components/Footer';
 import { useSkills } from '@/context/SkillsContext';
 import { useEffect } from 'react';
+import ScrollDownIndicator from '@/components/ScrollDownIndicator';
 
 const Skills = () => {
   // Save scroll position when leaving
@@ -40,6 +41,7 @@ const Skills = () => {
             </p>
           </div>
         </section>
+        <ScrollDownIndicator />
 
         {/* Skills Categories */}
         <section className="py-16">

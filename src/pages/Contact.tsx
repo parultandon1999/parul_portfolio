@@ -4,6 +4,7 @@ import SocialSidebar from '@/components/SocialSidebar';
 import Footer from '@/components/Footer';
 import { ArrowLeft, Mail, MapPin, Phone, Github, Linkedin, Twitter } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import ScrollDownIndicator from '@/components/ScrollDownIndicator';
 
 const Contact = () => {
   const navigate = useNavigate();
@@ -167,6 +168,7 @@ const Contact = () => {
             </p>
           </div>
         </section>
+        <ScrollDownIndicator />
 
         {/* Contact Info Cards */}
         <section className="py-20 border-b border-border">

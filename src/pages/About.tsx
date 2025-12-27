@@ -5,6 +5,7 @@ import Footer from '@/components/Footer';
 import { useAbout } from '@/context/AboutContext';
 import { Heart } from 'lucide-react';
 import { useEffect } from 'react';
+import ScrollDownIndicator from '@/components/ScrollDownIndicator';
 
 const About = () => {
   // Save scroll position when leaving
@@ -61,6 +62,7 @@ const About = () => {
             </p>
           </div>
         </section>
+        <ScrollDownIndicator />
 
         {/* Introduction */}
         <section className="py-16 border-b border-border">
