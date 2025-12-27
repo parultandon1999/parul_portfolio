@@ -129,12 +129,12 @@ export const GoToTopButton = () => {
 
           {/* Icon container */}
           <div
-            className={`relative flex items-center justify-center w-14 h-14 transition-all duration-500 ${
-              isHovered ? 'scale-105' : isNear ? 'scale-102' : 'scale-100'
-            }`}
-          >
+              className={`relative flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 transition-all duration-500 ${
+                isHovered ? 'scale-105' : isNear ? 'scale-102' : 'scale-100'
+              }`}
+            >
             <ChevronUp
-              size={24}
+              size={16}
               className={`transition-all duration-500 drop-shadow-lg animate-bounce`}
               style={{
                 color: buttonSettings.color,
