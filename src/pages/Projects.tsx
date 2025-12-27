@@ -3,8 +3,8 @@ import SocialSidebar from '@/components/SocialSidebar';
 import Footer from '@/components/Footer';
 import { useProjects } from '@/context/ProjectsContext';
 import { ExternalLink, Github } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import ProjectPreviewHover from '@/components/ProjectPreviewHover';
+import { useEffect } from 'react';
 
 interface Project {
   id: number;
@@ -23,6 +23,17 @@ interface Project {
 
 const Projects = () => {
   const { projects } = useProjects();
+  useEffect(() => {
+    // Restore scroll position when page loads
+    const savedPosition = sessionStorage.getItem('projectsScrollPosition');
+    if (savedPosition) {
+      // Add a small delay to ensure page is fully rendered
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedPosition));
+        sessionStorage.removeItem('projectsScrollPosition');
+      }, 500);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -55,12 +66,11 @@ const Projects = () => {
                     <span className="text-sm font-mono text-muted-foreground">
                       {String(index + 1).padStart(2, '0')}
                     </span>
-                    <Link
-                      to={`/projects/${project.id}`}
+                    <div
                       className="text-3xl md:text-4xl font-bold text-foreground group-hover:text-muted-foreground transition-colors"
                     >
                       {project.title}
-                    </Link>
+                    </div>
                   </div>
                   <div className="h-px w-12 bg-foreground/20" />
                 </div>
@@ -91,10 +101,21 @@ const Projects = () => {
                     description={project.description}
                     hoverPreview={project.hoverPreview}
                   >
-                    <button className="flex items-center gap-2 text-foreground hover:text-muted-foreground transition-colors font-mono text-sm">
-                      <ExternalLink size={16} />
-                      View Demo
-                    </button>
+                  <a 
+                    href={`/projects/${project.id}`}
+                    onClick={(e) => {
+                      // Don't let React Router handle this
+                      if (!e.ctrlKey && !e.metaKey) {
+                        e.preventDefault();
+                        // Force actual page reload
+                        window.location.href = window.location.origin + window.location.pathname.replace(/\/$/, '') + `/projects/${project.id}`;
+                      }
+                    }}
+                    className="flex items-center gap-2 ..."
+                  >
+                    <ExternalLink size={16} />
+                    View Demo
+                  </a>
                   </ProjectPreviewHover>
                   <a
                     href={project.github}

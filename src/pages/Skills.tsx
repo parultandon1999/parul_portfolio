@@ -2,8 +2,26 @@ import Navigation from '@/components/Navigation';
 import SocialSidebar from '@/components/SocialSidebar';
 import Footer from '@/components/Footer';
 import { useSkills } from '@/context/SkillsContext';
+import { useEffect } from 'react';
 
 const Skills = () => {
+  // Save scroll position when leaving
+  useEffect(() => {
+    return () => {
+      sessionStorage.setItem('skills-scroll', window.scrollY.toString());
+    };
+  }, []);
+
+  // Restore scroll position when entering
+  useEffect(() => {
+    const savedPosition = sessionStorage.getItem('skills-scroll');
+    if (savedPosition) {
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedPosition));
+        sessionStorage.removeItem('skills-scroll');
+      }, 500);
+    }
+  }, []);
   const { skillsData } = useSkills();
 
   return (

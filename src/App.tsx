@@ -24,12 +24,14 @@ import { ScrollProgressIndicator } from "./components/ScrollProgressIndicator";
 import { GoToTopButton } from "./components/GoToTopButton";
 import AdminSettings from "./pages/AdminSettings";
 import NotFound from "./pages/NotFound";
+import { PageLoader } from "./components/PageLoader";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+      <PageLoader />
       <Toaster />
       <Sonner />
       <ThemeProvider>

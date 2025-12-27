@@ -1,40 +1,124 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Mail, MapPin, Send } from 'lucide-react';
 
 const ContactSection = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [remainingAttempts, setRemainingAttempts] = useState<number | null>(null);
+  const [isCheckingLimit, setIsCheckingLimit] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // Check rate limit when email changes
+    if (name === 'email' && value) {
+      checkRateLimit(value);
+    }
+  };
+
+  const checkRateLimit = async (email: string) => {
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setRemainingAttempts(null);
+      return;
+    }
+
+    setIsCheckingLimit(true);
+    try {
+      const response = await fetch(`/api/check-rate-limit?email=${encodeURIComponent(email)}`);
+      if (response.ok) {
+        const data = await response.json();
+        setRemainingAttempts(data.remaining);
+      }
+    } catch (error) {
+      console.error('Error checking rate limit:', error);
+    } finally {
+      setIsCheckingLimit(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      const response = await fetch('/api/send-message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to send message');
+      }
+
+      setSubmitStatus('success');
+      setFormData({ name: '', email: '', message: '' });
+      setRemainingAttempts(null);
+      
+      // Reset status after 3 seconds
+      setTimeout(() => setSubmitStatus('idle'), 3000);
+    } catch (error) {
+      console.error('Error:', error);
+      setSubmitStatus('error');
+      // Check rate limit again after failed attempt
+      if (formData.email) {
+        checkRateLimit(formData.email);
+      }
+      setTimeout(() => setSubmitStatus('idle'), 3000);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <section id="contact" className="py-24 relative">
-      <div className="container mx-auto px-6 lg:px-20 relative z-10">
-        <div className="mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
+    <section id="contact" className="py-16 sm:py-24 relative">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-20 relative z-10">
+        <div className="mb-12 sm:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-foreground">
             <span className="text-muted-foreground">#</span>contact
           </h2>
-          <div className="w-32 h-px bg-border" />
+          <div className="w-24 sm:w-32 h-px bg-border" />
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-16">
-          <div className="space-y-8 animate-fade-in-up opacity-0" style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}>
-            <p className="text-muted-foreground font-sans text-lg leading-relaxed max-w-md">
+        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16">
+          <div className="space-y-6 sm:space-y-8 animate-fade-in-up opacity-0" style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}>
+            <p className="text-muted-foreground font-sans text-base sm:text-lg leading-relaxed max-w-md">
               I'm always interested in hearing about new opportunities, 
               collaborations, or just having a chat about data science and AI.
             </p>
 
-            <div className="space-y-4">
-              <div className="flex items-center gap-4 text-muted-foreground">
-                <div className="w-10 h-10 bg-secondary border border-border rounded-lg flex items-center justify-center">
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex items-center gap-3 sm:gap-4 text-muted-foreground">
+                <div className="w-10 h-10 bg-secondary border border-border rounded-lg flex items-center justify-center flex-shrink-0">
                   <Mail className="w-5 h-5 text-foreground" />
                 </div>
-                <span className="font-mono">hello@example.com</span>
+                <span className="font-mono text-sm sm:text-base break-all">hello@example.com</span>
               </div>
-              <div className="flex items-center gap-4 text-muted-foreground">
-                <div className="w-10 h-10 bg-secondary border border-border rounded-lg flex items-center justify-center">
+              <div className="flex items-center gap-3 sm:gap-4 text-muted-foreground">
+                <div className="w-10 h-10 bg-secondary border border-border rounded-lg flex items-center justify-center flex-shrink-0">
                   <MapPin className="w-5 h-5 text-foreground" />
                 </div>
-                <span className="font-mono">San Francisco, CA</span>
+                <span className="font-mono text-sm sm:text-base">San Francisco, CA</span>
               </div>
             </div>
 
-            <Button variant="default" size="lg" className="group">
+            <Button variant="default" size="lg" className="group w-full sm:w-auto">
               Send a Message
               <Send className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
             </Button>
@@ -42,43 +126,84 @@ const ContactSection = () => {
 
           {/* Contact form */}
           <div className="animate-fade-in-up opacity-0" style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}>
-            <div className="bg-card border border-border rounded-lg p-8 card-shadow">
-              <h3 className="text-xl font-mono font-semibold mb-6 text-foreground">
+            <div className="bg-card border border-border rounded-lg p-6 sm:p-8 card-shadow">
+              <h3 className="text-lg sm:text-xl font-mono font-semibold mb-6 text-foreground">
                 &lt;Message /&gt;
               </h3>
-              <form className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="text-sm font-mono text-muted-foreground mb-2 block">
+                  <label className="text-xs sm:text-sm font-mono text-muted-foreground mb-2 block">
                     _name
                   </label>
                   <input
                     type="text"
-                    className="w-full bg-secondary border border-border rounded-md px-4 py-3 font-sans text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    className="w-full bg-secondary border border-border rounded-md px-3 sm:px-4 py-2 sm:py-3 font-sans text-sm sm:text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors"
                     placeholder="Your name"
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-mono text-muted-foreground mb-2 block">
-                    _email
-                  </label>
+                  <div className="flex justify-between items-center mb-2">
+                    <label className="text-xs sm:text-sm font-mono text-muted-foreground block">
+                      _email
+                    </label>
+                    {isCheckingLimit && (
+                      <span className="text-xs text-muted-foreground">Checking...</span>
+                    )}
+                    {remainingAttempts !== null && !isCheckingLimit && (
+                      <span className={`text-xs font-mono ${remainingAttempts > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {remainingAttempts > 0 
+                          ? `${remainingAttempts} attempt${remainingAttempts !== 1 ? 's' : ''} left` 
+                          : 'Limit reached'}
+                      </span>
+                    )}
+                  </div>
                   <input
                     type="email"
-                    className="w-full bg-secondary border border-border rounded-md px-4 py-3 font-sans text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full bg-secondary border border-border rounded-md px-3 sm:px-4 py-2 sm:py-3 font-sans text-sm sm:text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors"
                     placeholder="your@email.com"
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-mono text-muted-foreground mb-2 block">
+                  <label className="text-xs sm:text-sm font-mono text-muted-foreground mb-2 block">
                     _message
                   </label>
                   <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
                     rows={4}
-                    className="w-full bg-secondary border border-border rounded-md px-4 py-3 font-sans text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors resize-none"
+                    className="w-full bg-secondary border border-border rounded-md px-3 sm:px-4 py-2 sm:py-3 font-sans text-sm sm:text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors resize-none"
                     placeholder="Your message..."
                   />
                 </div>
-                <Button type="submit" className="w-full" size="lg">
-                  Submit
+
+                {submitStatus === 'success' && (
+                  <div className="p-3 bg-green-500/10 border border-green-500/30 rounded text-green-600 text-xs sm:text-sm">
+                    ✓ Message sent successfully!
+                  </div>
+                )}
+                {submitStatus === 'error' && (
+                  <div className="p-3 bg-red-500/10 border border-red-500/30 rounded text-red-600 text-xs sm:text-sm">
+                    ✗ Error sending message. Please try again.
+                  </div>
+                )}
+
+                <Button 
+                  type="submit" 
+                  className="w-full" 
+                  size="lg" 
+                  disabled={isSubmitting || (remainingAttempts !== null && remainingAttempts <= 0)}
+                >
+                  {isSubmitting ? 'Sending...' : 'Submit'}
                 </Button>
               </form>
             </div>

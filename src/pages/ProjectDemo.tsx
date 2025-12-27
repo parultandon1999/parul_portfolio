@@ -4,8 +4,16 @@ import Navigation from '@/components/Navigation';
 import SocialSidebar from '@/components/SocialSidebar';
 import Footer from '@/components/Footer';
 import ProjectImageGallery from '@/components/ProjectImageGallery';
+import { useEffect } from 'react';
 
 const ProjectDemo = () => {
+
+  useEffect(() => {
+    // Save scroll position before leaving
+    return () => {
+      sessionStorage.setItem('projectsScrollPosition', window.scrollY.toString());
+    };
+  }, []);
   const { projectId } = useParams();
   const navigate = useNavigate();
 
@@ -144,13 +152,6 @@ const ProjectDemo = () => {
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">Project not found</h1>
-          <button
-            onClick={() => navigate('/projects')}
-            className="flex items-center gap-2 mx-auto px-6 py-3 bg-foreground text-background rounded-lg font-mono hover:bg-foreground/90 transition-colors"
-          >
-            <ArrowLeft size={16} />
-            Back to Projects
-          </button>
         </div>
       </div>
     );
@@ -164,13 +165,6 @@ const ProjectDemo = () => {
         {/* Header */}
         <section className="py-20 border-b border-border">
           <div className="container mx-auto px-6 lg:px-20">
-            <button
-              onClick={() => navigate('/projects')}
-              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8 font-mono text-sm"
-            >
-              <ArrowLeft size={16} />
-              Back to Projects
-            </button>
             <h1 className="text-5xl md:text-6xl font-bold mb-4 text-foreground">
               {demo.title}
             </h1>

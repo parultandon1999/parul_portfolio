@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 
 interface ProjectPreviewHoverProps {
   projectId: number;
@@ -27,11 +26,10 @@ const ProjectPreviewHover = ({
   const [position, setPosition] = useState<'bottom' | 'top' | 'left' | 'right'>('bottom');
   const triggerRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/projects/${projectId}`);
-  };
+  window.location.href = `/projects/${projectId}`;
+};
 
   // Calculate best position for preview
   useEffect(() => {

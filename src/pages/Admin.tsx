@@ -119,9 +119,9 @@ const Admin = () => {
             {/* Admin Sections - Dense Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
               {adminSections.map((section, index) => (
-                <Link
+                <a
                   key={index}
-                  to={section.href}
+                  href={section.href}
                   className="border border-border rounded-lg p-4 hover:border-foreground/50 hover:bg-secondary/30 transition-all group flex flex-col h-full bg-background"
                 >
                   <div className="flex items-start justify-between mb-3">
@@ -136,7 +136,7 @@ const Admin = () => {
                   <p className="text-xs text-muted-foreground leading-relaxed mb-4 flex-1">
                     {section.description}
                   </p>
-                </Link>
+                </a>
               ))}
             </div>
 

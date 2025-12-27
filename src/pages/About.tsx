@@ -4,8 +4,26 @@ import Footer from '@/components/Footer';
 
 import { useAbout } from '@/context/AboutContext';
 import { Heart } from 'lucide-react';
+import { useEffect } from 'react';
 
 const About = () => {
+  // Save scroll position when leaving
+  useEffect(() => {
+    return () => {
+      sessionStorage.setItem('about-scroll', window.scrollY.toString());
+    };
+  }, []);
+
+  // Restore scroll position when entering
+  useEffect(() => {
+    const savedPosition = sessionStorage.getItem('about-scroll');
+    if (savedPosition) {
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedPosition));
+        sessionStorage.removeItem('about-scroll');
+      }, 500);
+    }
+  }, []);
   const { aboutData } = useAbout(); [
     {
       year: '2019',

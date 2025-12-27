@@ -46,10 +46,6 @@ const AdminAbout = () => {
         {/* Header - Preserved as requested */}
         <section className="py-20 border-b border-border">
           <div className="container mx-auto px-6 lg:px-20">
-            <button onClick={() => navigate('/admin')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8 font-mono text-sm">
-              <ArrowLeft size={16} />
-              Back to Admin
-            </button>
             <h1 className="text-5xl md:text-6xl font-bold text-foreground">
               <span className="text-muted-foreground">#</span>manage-about
             </h1>

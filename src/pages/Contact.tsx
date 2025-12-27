@@ -15,6 +15,8 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [remainingAttempts, setRemainingAttempts] = useState<number | null>(null);
+  const [isCheckingLimit, setIsCheckingLimit] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -22,6 +24,33 @@ const Contact = () => {
       ...prev,
       [name]: value,
     }));
+
+    // Check rate limit when email changes
+    if (name === 'email' && value) {
+      checkRateLimit(value);
+    }
+  };
+
+  const checkRateLimit = async (email: string) => {
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setRemainingAttempts(null);
+      return;
+    }
+
+    setIsCheckingLimit(true);
+    try {
+      const response = await fetch(`/api/check-rate-limit?email=${encodeURIComponent(email)}`);
+      if (response.ok) {
+        const data = await response.json();
+        setRemainingAttempts(data.remaining);
+      }
+    } catch (error) {
+      console.error('Error checking rate limit:', error);
+    } finally {
+      setIsCheckingLimit(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -30,19 +59,36 @@ const Contact = () => {
     setSubmitStatus('idle');
 
     try {
-      // Simulate form submission
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      // Here you would typically send the form data to a backend service
-      console.log('Form submitted:', formData);
-      
+      const response = await fetch('/api/send-message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: `Subject: ${formData.subject}\n\n${formData.message}`,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to send message');
+      }
+
       setSubmitStatus('success');
       setFormData({ name: '', email: '', subject: '', message: '' });
+      setRemainingAttempts(null);
       
       // Reset status after 3 seconds
       setTimeout(() => setSubmitStatus('idle'), 3000);
     } catch (error) {
+      console.error('Error:', error);
       setSubmitStatus('error');
+      // Check rate limit again after failed attempt
+      if (formData.email) {
+        checkRateLimit(formData.email);
+      }
       setTimeout(() => setSubmitStatus('idle'), 3000);
     } finally {
       setIsSubmitting(false);
@@ -163,9 +209,21 @@ const Contact = () => {
 
                 {/* Email Field */}
                 <div>
-                  <label htmlFor="email" className="block text-sm font-mono text-muted-foreground mb-2">
-                    Email *
-                  </label>
+                  <div className="flex justify-between items-center mb-2">
+                    <label htmlFor="email" className="block text-sm font-mono text-muted-foreground">
+                      Email *
+                    </label>
+                    {isCheckingLimit && (
+                      <span className="text-xs text-muted-foreground">Checking...</span>
+                    )}
+                    {remainingAttempts !== null && !isCheckingLimit && (
+                      <span className={`text-xs font-mono ${remainingAttempts > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {remainingAttempts > 0 
+                          ? `${remainingAttempts} attempt${remainingAttempts !== 1 ? 's' : ''} left` 
+                          : 'Limit reached'}
+                      </span>
+                    )}
+                  </div>
                   <input
                     type="email"
                     id="email"
@@ -227,7 +285,7 @@ const Contact = () => {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || (remainingAttempts !== null && remainingAttempts <= 0)}
                   className="w-full px-6 py-3 bg-foreground text-background rounded-lg font-mono hover:bg-foreground/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? 'Sending...' : 'Send Message'}

@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
 import AdminAccessMenu from './AdminAccessMenu';
+import { Menu, X } from 'lucide-react';
 
 const Navigation = () => {
   const [scrolled, setScrolled] = useState(false);
-  const location = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,7 +16,7 @@ const Navigation = () => {
   }, []);
 
   const navLinks = [
-    { href: '/parul_portfolio', label: '#home', isAnchor: true },
+    { href: '/', label: '#home', isAnchor: true },
     { href: '/projects', label: '#projects', isAnchor: false },
     { href: '/skills', label: '#skills', isAnchor: false },
     { href: '/about', label: '#about', isAnchor: false },
@@ -29,47 +29,61 @@ const Navigation = () => {
         scrolled ? 'bg-background/30 backdrop-blur-sm border-b border-border' : ''
       }`}
     >
-      <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+      <div className="container mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         <AdminAccessMenu>
-          <Link to="/" className="font-mono text-xl font-bold flex items-center gap-2">
-            <span className="text-muted-foreground">&lt;</span>
-            <span className="text-foreground">DataScientist</span>
-            <span className="text-muted-foreground">/&gt;</span>
-          </Link>
+          <a href="/" className="font-mono text-lg sm:text-xl font-bold flex items-center gap-1 sm:gap-2">
+            <span className="text-muted-foreground text-sm sm:text-base">&lt;</span>
+            <span className="text-foreground text-sm sm:text-base">DS</span>
+            <span className="text-muted-foreground text-sm sm:text-base">/&gt;</span>
+          </a>
         </AdminAccessMenu>
 
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6 sm:gap-8">
           {navLinks.map((link) => (
-            link.isAnchor ? (
-              <a
-                key={link.href}
-                href={link.href}
-                className="font-mono text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
-              >
-                {link.label}
-              </a>
-            ) : (
-              <Link
-                key={link.href}
-                to={link.href}
-                className="font-mono text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
-              >
-                {link.label}
-              </Link>
-            )
+            <a
+              key={link.href}
+              href={link.href}
+              className="font-mono text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
+            >
+              {link.label}
+            </a>
           ))}
           <ThemeToggle />
         </div>
 
         <div className="md:hidden flex items-center gap-2">
           <ThemeToggle />
-          <button className="text-foreground p-2">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="text-foreground p-2"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-background/95 backdrop-blur-sm border-b border-border">
+          <div className="container mx-auto px-4 py-4 space-y-3">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="block font-mono text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
     </nav>
   );
 };

@@ -4,21 +4,21 @@ import DataScienceBackground from '@/components/DataScienceBackground';
 
 const HeroSection = () => {
   return (
-    <section id="home" className="min-h-screen flex items-center relative overflow-hidden">
+    <section id="home" className="min-h-screen flex items-center relative overflow-hidden pt-20 sm:pt-0">
       {/* Data Science Background Visualizations */}
       <DataScienceBackground />
 
-      <div className="container mx-auto px-6 lg:px-20 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-20 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
+          <div className="space-y-6 sm:space-y-8">
             <div className="animate-fade-in-up opacity-0" style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}>
-              <span className="inline-block px-4 py-2 bg-secondary rounded-full text-sm font-mono text-foreground border border-border">
-                Open for new opportunities
+              <span className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 bg-secondary rounded-full text-xs sm:text-sm font-mono text-foreground border border-border">
+                Open for opportunities
               </span>
             </div>
 
             <h1 className="animate-fade-in-up opacity-0" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
-              <span className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-foreground">
+              <span className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-foreground">
                 Hi, I'm a{' '}
                 <span className="underline decoration-2 underline-offset-4">Data Scientist</span>
                 <br />
@@ -27,47 +27,47 @@ const HeroSection = () => {
               </span>
             </h1>
 
-            <p className="text-lg text-muted-foreground max-w-lg font-sans animate-fade-in-up opacity-0" style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}>
+            <p className="text-base sm:text-lg text-muted-foreground max-w-lg font-sans animate-fade-in-up opacity-0" style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}>
               I transform complex data into actionable insights and build 
               intelligent systems that drive business decisions.
             </p>
 
-            <div className="flex flex-wrap gap-4 animate-fade-in-up opacity-0" style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}>
-              <Button variant="default" size="lg" className="group">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 animate-fade-in-up opacity-0" style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}>
+              <Button variant="default" size="lg" className="group w-full sm:w-auto">
                 Contact Me
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <Button variant="outline" size="lg">
+              <Button variant="outline" size="lg" className="w-full sm:w-auto">
                 <Download className="w-4 h-4" />
                 Download CV
               </Button>
             </div>
 
-            <div className="flex gap-8 pt-4 animate-fade-in-up opacity-0" style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}>
+            <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 pt-4 animate-fade-in-up opacity-0" style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}>
               <div>
-                <div className="text-3xl font-mono font-bold text-foreground">5+</div>
-                <div className="text-sm text-muted-foreground">Years Experience</div>
+                <div className="text-2xl sm:text-3xl font-mono font-bold text-foreground">5+</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Years Experience</div>
               </div>
               <div>
-                <div className="text-3xl font-mono font-bold text-foreground">50+</div>
-                <div className="text-sm text-muted-foreground">Projects Done</div>
+                <div className="text-2xl sm:text-3xl font-mono font-bold text-foreground">50+</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Projects Done</div>
               </div>
               <div>
-                <div className="text-3xl font-mono font-bold text-foreground">20+</div>
-                <div className="text-sm text-muted-foreground">ML Models</div>
+                <div className="text-2xl sm:text-3xl font-mono font-bold text-foreground">20+</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">ML Models</div>
               </div>
             </div>
           </div>
 
-          {/* Profile visual */}
-          <div className="relative hidden lg:block">
+          {/* Profile visual - Now visible on all screens */}
+          <div className="relative mt-8 sm:mt-0">
             <div className="relative">
-              {/* Geometric frame */}
-              <div className="absolute -top-8 -left-8 w-64 h-64 border border-border" />
-              <div className="absolute -top-4 -left-4 w-64 h-64 border border-muted-foreground/30" />
+              {/* Geometric frame - Hidden on mobile, shown on larger screens */}
+              <div className="absolute -top-8 -left-8 w-48 sm:w-64 h-48 sm:h-64 border border-border hidden sm:block" />
+              <div className="absolute -top-4 -left-4 w-48 sm:w-64 h-48 sm:h-64 border border-muted-foreground/30 hidden sm:block" />
               
               {/* Profile placeholder with data visualization aesthetic */}
-              <div className="w-80 h-96 bg-card rounded-lg overflow-hidden relative card-shadow border border-border">
+              <div className="w-full sm:w-80 h-64 sm:h-96 bg-card rounded-lg overflow-hidden relative card-shadow border border-border mx-auto">
                 {/* Mini chart visualization inside profile */}
                 <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 320 384">
                   {/* Bar chart */}
@@ -94,21 +94,21 @@ const HeroSection = () => {
 
                 {/* Abstract data visualization */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="space-y-4 text-center p-8">
-                    <div className="w-24 h-24 mx-auto rounded-full bg-secondary border border-border flex items-center justify-center">
-                      <span className="text-4xl font-mono font-bold text-foreground">&lt;/&gt;</span>
+                  <div className="space-y-4 text-center p-6 sm:p-8">
+                    <div className="w-20 sm:w-24 h-20 sm:h-24 mx-auto rounded-full bg-secondary border border-border flex items-center justify-center">
+                      <span className="text-3xl sm:text-4xl font-mono font-bold text-foreground">&lt;/&gt;</span>
                     </div>
                     <div className="space-y-2">
-                      <div className="h-2 bg-muted-foreground/30 rounded w-32 mx-auto" />
-                      <div className="h-2 bg-muted-foreground/20 rounded w-24 mx-auto" />
-                      <div className="h-2 bg-muted-foreground/10 rounded w-28 mx-auto" />
+                      <div className="h-2 bg-muted-foreground/30 rounded w-24 sm:w-32 mx-auto" />
+                      <div className="h-2 bg-muted-foreground/20 rounded w-20 sm:w-24 mx-auto" />
+                      <div className="h-2 bg-muted-foreground/10 rounded w-22 sm:w-28 mx-auto" />
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Floating elements */}
-              <div className="absolute -right-12 top-1/4 w-20 h-20 opacity-30">
+              {/* Floating elements - Hidden on mobile */}
+              <div className="absolute -right-12 top-1/4 w-20 h-20 opacity-30 hidden sm:block">
                 <svg viewBox="0 0 80 80">
                   {[0, 1, 2, 3, 4].map((i) => (
                     <circle
@@ -121,7 +121,7 @@ const HeroSection = () => {
                   ))}
                 </svg>
               </div>
-              <div className="absolute -right-8 bottom-1/4 w-4 h-4 bg-foreground rounded-full" />
+              <div className="absolute -right-8 bottom-1/4 w-4 h-4 bg-foreground rounded-full hidden sm:block" />
             </div>
           </div>
         </div>

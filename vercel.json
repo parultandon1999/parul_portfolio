@@ -1,0 +1,9 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "env": {
+    "EMAIL_USER": "@EMAIL_USER",
+    "EMAIL_PASSWORD": "@EMAIL_PASSWORD",
+    "EMAIL_RECIPIENT": "@EMAIL_RECIPIENT"
+  }
+}

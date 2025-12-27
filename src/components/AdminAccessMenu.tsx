@@ -17,7 +17,6 @@ const AdminAccessMenu = ({ children }: AdminAccessMenuProps) => {
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { isAuthenticated, login } = useAdminAuth();
-  const navigate = useNavigate();
 
   const handleMouseEnter = () => {
     // Only show hover timer if not authenticated
@@ -63,7 +62,7 @@ const AdminAccessMenu = ({ children }: AdminAccessMenuProps) => {
       if (login(password)) {
         setPassword('');
         setShowMenu(false);
-        navigate('/admin');
+        window.location.href = `/admin`;
       } else {
         setError('Invalid password');
         setPassword('');
@@ -75,7 +74,7 @@ const AdminAccessMenu = ({ children }: AdminAccessMenuProps) => {
 
   const handleAdminClick = () => {
     if (isAuthenticated) {
-      navigate('/admin');
+      window.location.href = `/admin`;
       setShowMenu(false);
     }
   };

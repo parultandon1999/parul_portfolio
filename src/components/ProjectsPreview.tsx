@@ -5,8 +5,6 @@ import DataScienceBackground from './DataScienceBackground';
 
 const ProjectsPreview = () => {
   const { projects } = useProjects();
-  
-  // Show only first 3 projects
   const previewProjects = projects.slice(0, 3);
 
   if (previewProjects.length === 0) {
@@ -34,9 +32,9 @@ const ProjectsPreview = () => {
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {previewProjects.map((project) => (
-            <Link
+            <a
               key={project.id}
-              to={`/projects/${project.id}`}
+              href={`/projects/${project.id}`}
               className="group border border-border rounded-lg overflow-hidden hover:border-foreground/50 transition-all duration-300 hover:shadow-lg"
             >
               {/* Project Card */}
@@ -86,19 +84,23 @@ const ProjectsPreview = () => {
                   </div>
                 </div>
               </div>
-            </Link>
+            </a>
           ))}
         </div>
 
         {/* View All Button */}
         {projects.length > 3 && (
           <div className="flex justify-center">
-            <Link
-              to="/projects"
-              className="px-8 py-3 border border-foreground text-foreground rounded-lg font-mono hover:bg-foreground hover:text-background transition-colors"
+            <a
+              href="/projects"
+              onClick={() => {
+                // Clear saved scroll position so it loads from top
+                sessionStorage.removeItem('projects-scroll');
+              }}
+              className="px-8 py-3 border border-foreground text-foreground rounded-lg font-mono hover:bg-foreground hover:text-background transition-colors cursor-pointer"
             >
               View All Projects
-            </Link>
+            </a>
           </div>
         )}
       </div>
