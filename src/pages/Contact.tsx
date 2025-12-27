@@ -4,10 +4,15 @@ import SocialSidebar from '@/components/SocialSidebar';
 import Footer from '@/components/Footer';
 import { ArrowLeft, Mail, MapPin, Phone, Github, Linkedin, Twitter } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import { Send } from 'lucide-react';
 import ScrollDownIndicator from '@/components/ScrollDownIndicator';
+import { useTheme } from '@/hooks/useTheme';
+import { toast } from '@/components/ui/sonner';
 
 const Contact = () => {
   const navigate = useNavigate();
+  const { theme } = useTheme();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -15,7 +20,6 @@ const Contact = () => {
     message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [remainingAttempts, setRemainingAttempts] = useState<number | null>(null);
   const [isCheckingLimit, setIsCheckingLimit] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
@@ -68,7 +72,6 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmitStatus('idle');
 
     try {
       const response = await fetch('/api/send-message', {
@@ -88,21 +91,21 @@ const Contact = () => {
         throw new Error(error.error || 'Failed to send message');
       }
 
-      setSubmitStatus('success');
+      toast.success('Message sent successfully!', {
+        description: "I'll get back to you soon."
+      });
       setFormData({ name: '', email: '', subject: '', message: '' });
       setRemainingAttempts(null);
       setEmailError(null);
-      
-      // Reset status after 3 seconds
-      setTimeout(() => setSubmitStatus('idle'), 3000);
     } catch (error) {
       console.error('Error:', error);
-      setSubmitStatus('error');
+      toast.error('Failed to send message', {
+        description: error instanceof Error ? error.message : 'Please try again.'
+      });
       // Check rate limit again after failed attempt
       if (formData.email && validateEmailFormat(formData.email)) {
         checkRateLimit(formData.email);
       }
-      setTimeout(() => setSubmitStatus('idle'), 3000);
     } finally {
       setIsSubmitting(false);
     }
@@ -291,26 +294,37 @@ const Contact = () => {
                   />
                 </div>
 
-                {/* Status Messages */}
-                {submitStatus === 'success' && (
-                  <div className="p-4 bg-green-500/10 border border-green-500/30 rounded-lg text-green-600 text-sm">
-                    ✓ Message sent successfully! I'll get back to you soon.
-                  </div>
-                )}
-                {submitStatus === 'error' && (
-                  <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-600 text-sm">
-                    ✗ Error sending message. Please try again.
-                  </div>
-                )}
-
-                {/* Submit Button */}
-                <button
+                <Button
                   type="submit"
+                  variant="contained"
+                  fullWidth
                   disabled={isSubmitting || (remainingAttempts !== null && remainingAttempts <= 0) || !!emailError}
-                  className="w-full px-6 py-3 bg-foreground text-background rounded-lg font-mono hover:bg-foreground/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  endIcon={<Send size={18} />}
+                  sx={{
+                    backgroundColor: theme === 'light' ? '#000000' : '#ffffff',
+                    color: theme === 'light' ? '#ffffff' : '#000000',
+                    fontFamily: 'monospace',
+                    textTransform: 'none',
+                    fontSize: '1rem',
+                    fontWeight: 500,
+                    padding: '12px 24px',
+                    borderRadius: '8px',
+                    '&:hover': {
+                      backgroundColor: theme === 'light' ? '#1a1a1a' : '#e6e6e6',
+                    },
+                    '&:active': {
+                      backgroundColor: theme === 'light' ? '#000000' : '#ffffff',
+                    },
+                    '&:disabled': {
+                      opacity: 0.5,
+                      backgroundColor: theme === 'light' ? '#000000' : '#ffffff',
+                      color: theme === 'light' ? '#ffffff' : '#000000',
+                    },
+                    transition: 'all 0.2s ease-in-out',
+                  }}
                 >
                   {isSubmitting ? 'Sending...' : 'Send Message'}
-                </button>
+                </Button>
               </form>
             </div>
           </div>
