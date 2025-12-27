@@ -54,7 +54,7 @@ const HeroSection = () => {
             <h1 className="animate-fade-in-up opacity-100" style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}>
               <span className="text-xl sm:text-4xl md:text-5xl lg:text-5xl font-bold leading-tight text-foreground">
                 Hi, I'm a{' '}
-                <span className="underline decoration-2 underline-offset-4">Data Scientist</span>
+                <span className="decoration-2 underline-offset-4">Data Scientist</span>
                 <br />
                 and{' '}
                 <span className="text-muted-foreground">ML Engineer</span>
