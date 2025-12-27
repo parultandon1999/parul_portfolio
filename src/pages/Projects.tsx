@@ -5,6 +5,7 @@ import { useProjects } from '@/context/ProjectsContext';
 import { ExternalLink, Github } from 'lucide-react';
 import ProjectPreviewHover from '@/components/ProjectPreviewHover';
 import { useEffect } from 'react';
+import ScrollDownIndicator from '@/components/ScrollDownIndicator';
 
 interface Project {
   id: number;
@@ -51,6 +52,8 @@ const Projects = () => {
             </p>
           </div>
         </section>
+        <ScrollDownIndicator />
+
 
         {/* Stacked Cards Section */}
         <div className="w-full py-20">
