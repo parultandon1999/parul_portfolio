@@ -8,6 +8,7 @@ import { SkillsProvider } from "./context/SkillsContext";
 import { AboutProvider } from "./context/AboutContext";
 import { ContentProvider } from "./context/ContentContext";
 import { SettingsProvider } from "./context/SettingsContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import Index from "./pages/Index";
 import Projects from "./pages/Projects";
 import ProjectDemo from "./pages/ProjectDemo";
@@ -31,34 +32,36 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <ProjectsProvider>
-        <SkillsProvider>
-          <AboutProvider>
-            <ContentProvider>
-              <SettingsProvider>
-                <ScrollProgressIndicator />
-                <GoToTopButton />
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/projects" element={<Projects />} />
-                  <Route path="/projects/:projectId" element={<ProjectDemo />} />
-                  <Route path="/skills" element={<Skills />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/admin" element={<Admin />} />
-                  <Route path="/admin/projects" element={<AdminProjects />} />
-                  <Route path="/admin/skills" element={<AdminSkills />} />
-                  <Route path="/admin/about" element={<AdminAbout />} />
-                  <Route path="/admin/content" element={<AdminContent />} />
-                  <Route path="/admin/settings" element={<AdminSettings />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </SettingsProvider>
-            </ContentProvider>
-          </AboutProvider>
-        </SkillsProvider>
-      </ProjectsProvider>
+      <ThemeProvider>
+        <ProjectsProvider>
+          <SkillsProvider>
+            <AboutProvider>
+              <ContentProvider>
+                <SettingsProvider>
+                  <ScrollProgressIndicator />
+                  <GoToTopButton />
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/projects" element={<Projects />} />
+                    <Route path="/projects/:projectId" element={<ProjectDemo />} />
+                    <Route path="/skills" element={<Skills />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/admin" element={<Admin />} />
+                    <Route path="/admin/projects" element={<AdminProjects />} />
+                    <Route path="/admin/skills" element={<AdminSkills />} />
+                    <Route path="/admin/about" element={<AdminAbout />} />
+                    <Route path="/admin/content" element={<AdminContent />} />
+                    <Route path="/admin/settings" element={<AdminSettings />} />
+                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </SettingsProvider>
+              </ContentProvider>
+            </AboutProvider>
+          </SkillsProvider>
+        </ProjectsProvider>
+      </ThemeProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

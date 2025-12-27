@@ -26,15 +26,6 @@ export const GoToTopButton = () => {
     return null;
   }
 
-  const toggleVisibility = () => {
-    if (window.scrollY > 300) {
-      setIsVisible(true);
-      setShouldRender(true);
-    } else {
-      setIsVisible(false);
-    }
-  };
-
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -42,30 +33,40 @@ export const GoToTopButton = () => {
     });
   };
 
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!buttonRef.current) return;
-
-    const rect = buttonRef.current.getBoundingClientRect();
-    const buttonCenterX = rect.left + rect.width / 2;
-    const buttonCenterY = rect.top + rect.height / 2;
-
-    const distance = Math.sqrt(
-      Math.pow(e.clientX - buttonCenterX, 2) + Math.pow(e.clientY - buttonCenterY, 2)
-    );
-
-    // Detect if cursor is within 150px of the button
-    if (distance < 150) {
-      setIsNear(true);
-    } else {
-      setIsNear(false);
-    }
-  };
-
   useEffect(() => {
+    const toggleVisibility = () => {
+      if (window.scrollY > 300) {
+        setIsVisible(true);
+        setShouldRender(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!buttonRef.current) return;
+
+      const rect = buttonRef.current.getBoundingClientRect();
+      const buttonCenterX = rect.left + rect.width / 2;
+      const buttonCenterY = rect.top + rect.height / 2;
+
+      const distance = Math.sqrt(
+        Math.pow(e.clientX - buttonCenterX, 2) + Math.pow(e.clientY - buttonCenterY, 2)
+      );
+
+      if (distance < 150) {
+        setIsNear(true);
+      } else {
+        setIsNear(false);
+      }
+    };
+
+    // Call immediately on mount to check initial scroll position
+    toggleVisibility();
+
     window.addEventListener('scroll', toggleVisibility);
     window.addEventListener('mousemove', handleMouseMove);
     
-    // Handle animation end to remove from DOM
     const handleAnimationEnd = () => {
       if (!isVisible) {
         setShouldRender(false);
@@ -84,7 +85,7 @@ export const GoToTopButton = () => {
         button.removeEventListener('animationend', handleAnimationEnd);
       }
     };
-  }, [isVisible]);
+  }, []);
 
   return (
     <>
