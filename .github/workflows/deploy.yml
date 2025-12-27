@@ -28,12 +28,7 @@ jobs:
 
       - name: Build
         run: npm run build
-        env:
-          # These are dummy values for GitHub Pages build
-          # For production, deploy to Vercel instead
-          EMAIL_USER: ${{ secrets.EMAIL_USER || 'dummy@gmail.com' }}
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD || 'dummy' }}
-          EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT || 'dummy@gmail.com' }}
+        run: npm run dev:all
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
