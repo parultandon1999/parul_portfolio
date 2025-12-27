@@ -21,8 +21,8 @@ const ProjectsPreview = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-20 relative z-10">
         {/* Header */}
         <div className="mb-12 sm:mb-16">
-          <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6 text-foreground">
-            <span className="text-muted-foreground">#</span>featured-projects
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-foreground">
+            <span className="text-muted-foreground">#</span>projects
           </h2>
           <p className="text-sm sm:text-lg text-muted-foreground max-w-2xl">
             A selection of recent projects showcasing expertise in data science and machine learning.
