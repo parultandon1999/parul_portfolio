@@ -24,8 +24,20 @@ const ProjectPreviewHover = ({
 }: ProjectPreviewHoverProps) => {
   const [isHovering, setIsHovering] = useState(false);
   const [position, setPosition] = useState<'bottom' | 'top' | 'left' | 'right'>('bottom');
+  const [isMobile, setIsMobile] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
+
+  // Check if mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // md breakpoint
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleClick = () => {
   window.location.href = `/projects/${projectId}`;
@@ -88,7 +100,7 @@ const ProjectPreviewHover = ({
     <div
       ref={triggerRef}
       className="relative inline-block"
-      onMouseEnter={() => setIsHovering(true)}
+      onMouseEnter={() => !isMobile && setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
       <button onClick={handleClick} className="cursor-pointer">
@@ -96,7 +108,7 @@ const ProjectPreviewHover = ({
       </button>
 
       <AnimatePresence>
-        {isHovering && (
+        {isHovering && !isMobile && (
           <motion.div
             ref={previewRef}
             initial={{ opacity: 0, scale: 0.95 }}

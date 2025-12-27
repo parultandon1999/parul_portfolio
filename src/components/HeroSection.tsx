@@ -102,6 +102,17 @@ const HeroSection = () => {
               <div className="absolute -top-8 -left-8 w-48 sm:w-64 h-48 sm:h-64 border border-border hidden sm:block" />
               <div className="absolute -top-4 -left-4 w-48 sm:w-64 h-48 sm:h-64 border border-muted-foreground/30 hidden sm:block" />
               
+              {/* Your profile image behind the chart */}
+              <div className="absolute -top-8 -left-8 w-48 sm:w-64 h-48 sm:h-64 hidden sm:block overflow-hidden rounded-lg">
+                <img 
+                  src="/pic.png" 
+                  alt="Profile" 
+                  className="w-full h-full object-cover opacity-70 pointer-events-none select-none"
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
+                />
+              </div>
+              
               {/* Profile placeholder with data visualization aesthetic */}
               <div className="w-full sm:w-80 h-64 sm:h-96 bg-card rounded-lg overflow-hidden relative card-shadow border border-border mx-auto">
                 {/* Mini chart visualization inside profile */}
@@ -131,10 +142,19 @@ const HeroSection = () => {
                 {/* Abstract data visualization */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="space-y-4 text-center p-6 sm:p-8">
-                    <div className="w-20 sm:w-24 h-20 sm:h-24 mx-auto rounded-full bg-secondary border border-border flex items-center justify-center">
-                      <span className="text-3xl sm:text-4xl font-mono font-bold text-foreground">&lt;/&gt;</span>
+                    {/* Circle - bigger on mobile, shows image on mobile and code on desktop */}
+                    <div className="w-32 sm:w-24 h-32 sm:h-24 mx-auto rounded-full bg-secondary border border-border flex items-center justify-center overflow-hidden select-none">
+                      {/* Image on mobile, code on desktop */}
+                      <img 
+                        src="/pic.png" 
+                        alt="Profile" 
+                        className="w-full h-full object-cover sm:hidden pointer-events-none"
+                        draggable={false}
+                        onContextMenu={(e) => e.preventDefault()}
+                      />
+                      <span className="text-3xl sm:text-4xl font-mono font-bold text-foreground hidden sm:block">&lt;/&gt;</span>
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-2 hidden sm:block">
                       <div className="h-2 bg-muted-foreground/30 rounded w-24 sm:w-32 mx-auto" />
                       <div className="h-2 bg-muted-foreground/20 rounded w-20 sm:w-24 mx-auto" />
                       <div className="h-2 bg-muted-foreground/10 rounded w-22 sm:w-28 mx-auto" />
