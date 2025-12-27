@@ -17,6 +17,12 @@ const Contact = () => {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [remainingAttempts, setRemainingAttempts] = useState<number | null>(null);
   const [isCheckingLimit, setIsCheckingLimit] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
+
+  const validateEmailFormat = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -25,20 +31,25 @@ const Contact = () => {
       [name]: value,
     }));
 
-    // Check rate limit when email changes
-    if (name === 'email' && value) {
-      checkRateLimit(value);
+    // Handle email field changes
+    if (name === 'email') {
+      if (!value) {
+        // Clear everything if email is empty
+        setRemainingAttempts(null);
+        setEmailError(null);
+      } else if (!validateEmailFormat(value)) {
+        // Show error for invalid format
+        setEmailError('Invalid email format');
+        setRemainingAttempts(null);
+      } else {
+        // Valid format, check rate limit
+        setEmailError(null);
+        checkRateLimit(value);
+      }
     }
   };
 
   const checkRateLimit = async (email: string) => {
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setRemainingAttempts(null);
-      return;
-    }
-
     setIsCheckingLimit(true);
     try {
       const response = await fetch(`/api/check-rate-limit?email=${encodeURIComponent(email)}`);
@@ -79,6 +90,7 @@ const Contact = () => {
       setSubmitStatus('success');
       setFormData({ name: '', email: '', subject: '', message: '' });
       setRemainingAttempts(null);
+      setEmailError(null);
       
       // Reset status after 3 seconds
       setTimeout(() => setSubmitStatus('idle'), 3000);
@@ -86,7 +98,7 @@ const Contact = () => {
       console.error('Error:', error);
       setSubmitStatus('error');
       // Check rate limit again after failed attempt
-      if (formData.email) {
+      if (formData.email && validateEmailFormat(formData.email)) {
         checkRateLimit(formData.email);
       }
       setTimeout(() => setSubmitStatus('idle'), 3000);
@@ -213,10 +225,15 @@ const Contact = () => {
                     <label htmlFor="email" className="block text-sm font-mono text-muted-foreground">
                       Email *
                     </label>
-                    {isCheckingLimit && (
+                    {emailError && (
+                      <span className="text-xs text-red-600 font-mono">
+                        {emailError}
+                      </span>
+                    )}
+                    {!emailError && isCheckingLimit && (
                       <span className="text-xs text-muted-foreground">Checking...</span>
                     )}
-                    {remainingAttempts !== null && !isCheckingLimit && (
+                    {!emailError && remainingAttempts !== null && !isCheckingLimit && (
                       <span className={`text-xs font-mono ${remainingAttempts > 0 ? 'text-green-600' : 'text-red-600'}`}>
                         {remainingAttempts > 0 
                           ? `${remainingAttempts} attempt${remainingAttempts !== 1 ? 's' : ''} left` 
@@ -231,7 +248,9 @@ const Contact = () => {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-secondary border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:border-foreground transition-colors"
+                    className={`w-full px-4 py-3 bg-secondary border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none transition-colors ${
+                      emailError ? 'border-red-500 focus:border-red-600' : 'border-border focus:border-foreground'
+                    }`}
                     placeholder="your.email@example.com"
                   />
                 </div>
@@ -285,7 +304,7 @@ const Contact = () => {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  disabled={isSubmitting || (remainingAttempts !== null && remainingAttempts <= 0)}
+                  disabled={isSubmitting || (remainingAttempts !== null && remainingAttempts <= 0) || !!emailError}
                   className="w-full px-6 py-3 bg-foreground text-background rounded-lg font-mono hover:bg-foreground/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? 'Sending...' : 'Send Message'}
