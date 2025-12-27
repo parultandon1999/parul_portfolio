@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { getRemainingAttempts } from './utils/rateLimit';
+import { getRemainingAttempts } from './utils/rateLimit.js';
 
 export default async function handler(
   req: VercelRequest,

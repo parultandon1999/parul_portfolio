@@ -2,7 +2,7 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import nodemailer from 'nodemailer';
 import dns from 'dns';
 import { promisify } from 'util';
-import { canSendEmail, recordSubmission } from './utils/rateLimit';
+import { canSendEmail, recordSubmission } from './utils/rateLimit.js';
 
 const resolveMx = promisify(dns.resolveMx);
 
