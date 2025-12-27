@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import { ArrowRight, Download } from 'lucide-react';
 import DataScienceBackground from '@/components/DataScienceBackground';
 import { toast } from '@/components/ui/sonner';
@@ -37,21 +36,21 @@ const HeroSection = () => {
     }
   };
   return (
-    <section id="home" className="min-h-screen flex items-center relative overflow-hidden pt-20 sm:pt-0">
+    <section id="home" className="min-h-screen flex items-center relative overflow-hidden pt-16 sm:pt-0">
       {/* Data Science Background Visualizations */}
       <DataScienceBackground />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-20 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
-          <div className="space-y-6 sm:space-y-8">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-12 items-center">
+          <div className="space-y-4 sm:space-y-8">
             <div className="animate-fade-in-up opacity-0" style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}>
-              <span className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 bg-secondary rounded-full text-xs sm:text-sm font-mono text-foreground border border-border">
+              <span className="inline-block px-3 sm:px-4 py-1 sm:py-2 bg-secondary rounded-full text-xs sm:text-sm font-mono text-foreground border border-border">
                 Open for opportunities
               </span>
             </div>
 
             <h1 className="animate-fade-in-up opacity-0" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
-              <span className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-foreground">
+              <span className="text-xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-foreground">
                 Hi, I'm a{' '}
                 <span className="underline decoration-2 underline-offset-4">Data Scientist</span>
                 <br />
@@ -60,36 +59,36 @@ const HeroSection = () => {
               </span>
             </h1>
 
-            <p className="text-base sm:text-lg text-muted-foreground max-w-lg font-sans animate-fade-in-up opacity-0" style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}>
+            <p className="text-sm sm:text-lg text-muted-foreground max-w-lg font-sans animate-fade-in-up opacity-0" style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}>
               I transform complex data into actionable insights and build 
               intelligent systems that drive business decisions.
             </p>
 
-            <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 animate-fade-in-up opacity-0" style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}>
-              <a href="/contact" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-foreground text-background rounded-lg font-mono hover:bg-foreground/90 transition-colors w-full sm:w-auto group">
+            <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-4 animate-fade-in-up opacity-0" style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}>
+              <a href="/contact" className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-foreground text-background rounded-lg font-mono text-sm sm:text-base hover:bg-foreground/90 transition-colors w-full sm:w-auto group">
                 Contact Me
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </a>
               <button 
                 onClick={handleDownloadCV}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-foreground rounded-lg font-mono hover:bg-secondary transition-colors w-full sm:w-auto"
+                className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 border border-border text-foreground rounded-lg font-mono text-sm sm:text-base hover:bg-secondary transition-colors w-full sm:w-auto"
               >
                 <Download className="w-4 h-4" />
                 Download CV
               </button>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 pt-4 animate-fade-in-up opacity-0" style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}>
+            <div className="flex flex-col gap-4 sm:flex-row sm:gap-8 pt-2 sm:pt-4 animate-fade-in-up opacity-0" style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}>
               <div>
-                <div className="text-2xl sm:text-3xl font-mono font-bold text-foreground">5+</div>
+                <div className="text-xl sm:text-3xl font-mono font-bold text-foreground">5+</div>
                 <div className="text-xs sm:text-sm text-muted-foreground">Years Experience</div>
               </div>
               <div>
-                <div className="text-2xl sm:text-3xl font-mono font-bold text-foreground">50+</div>
+                <div className="text-xl sm:text-3xl font-mono font-bold text-foreground">50+</div>
                 <div className="text-xs sm:text-sm text-muted-foreground">Projects Done</div>
               </div>
               <div>
-                <div className="text-2xl sm:text-3xl font-mono font-bold text-foreground">20+</div>
+                <div className="text-xl sm:text-3xl font-mono font-bold text-foreground">20+</div>
                 <div className="text-xs sm:text-sm text-muted-foreground">ML Models</div>
               </div>
             </div>

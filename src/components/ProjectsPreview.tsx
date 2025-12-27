@@ -18,19 +18,19 @@ const ProjectsPreview = () => {
         <DataScienceBackground />
       </div>
 
-      <div className="container mx-auto px-6 lg:px-20 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-20 relative z-10">
         {/* Header */}
-        <div className="mb-16">
-          <h2 className="text-5xl md:text-6xl font-bold mb-6 text-foreground">
+        <div className="mb-12 sm:mb-16">
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6 text-foreground">
             <span className="text-muted-foreground">#</span>featured-projects
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl">
+          <p className="text-sm sm:text-lg text-muted-foreground max-w-2xl">
             A selection of recent projects showcasing expertise in data science and machine learning.
           </p>
         </div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
           {previewProjects.map((project) => (
             <a
               key={project.id}
@@ -41,7 +41,7 @@ const ProjectsPreview = () => {
               <div className="h-full flex flex-col">
                 {/* Image */}
                 {project.image && (
-                  <div className="relative h-48 overflow-hidden bg-secondary">
+                  <div className="relative h-40 sm:h-48 overflow-hidden bg-secondary">
                     <img
                       src={project.image}
                       alt={project.title}
@@ -52,16 +52,16 @@ const ProjectsPreview = () => {
                 )}
 
                 {/* Content */}
-                <div className="p-6 flex-1 flex flex-col">
-                  <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-muted-foreground transition-colors">
+                <div className="p-4 sm:p-6 flex-1 flex flex-col">
+                  <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2 group-hover:text-muted-foreground transition-colors">
                     {project.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2 flex-1">
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 line-clamp-2 flex-1">
                     {project.description}
                   </p>
 
                   {/* Tags */}
-                  <div className="flex flex-wrap gap-2 mb-4">
+                  <div className="flex flex-wrap gap-2 mb-3 sm:mb-4">
                     {project.tags.slice(0, 3).map((tag) => (
                       <span
                         key={tag}
@@ -78,7 +78,7 @@ const ProjectsPreview = () => {
                   </div>
 
                   {/* View More */}
-                  <div className="flex items-center gap-2 text-sm font-mono text-foreground group-hover:text-muted-foreground transition-colors">
+                  <div className="flex items-center gap-2 text-xs sm:text-sm font-mono text-foreground group-hover:text-muted-foreground transition-colors">
                     <span>View Project</span>
                     <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -97,7 +97,7 @@ const ProjectsPreview = () => {
                 // Clear saved scroll position so it loads from top
                 sessionStorage.removeItem('projects-scroll');
               }}
-              className="px-8 py-3 border border-foreground text-foreground rounded-lg font-mono hover:bg-foreground hover:text-background transition-colors cursor-pointer"
+              className="px-6 sm:px-8 py-2.5 sm:py-3 border border-foreground text-foreground rounded-lg font-mono text-sm sm:text-base hover:bg-foreground hover:text-background transition-colors cursor-pointer"
             >
               View All Projects
             </a>

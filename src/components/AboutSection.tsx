@@ -2,50 +2,50 @@ import DataScienceBackground from '@/components/DataScienceBackground';
 
 const AboutSection = () => {
   return (
-    <section id="about" className="py-24 relative">
+    <section id="about" className="py-12 sm:py-16 md:py-24 relative">
       {/* Data Science Background */}
       <DataScienceBackground />
       
-      <div className="container mx-auto px-6 lg:px-20 relative z-10">
-        <div className="mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-20 relative z-10">
+        <div className="mb-8 sm:mb-12 md:mb-16">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-foreground">
             <span className="text-muted-foreground">#</span>about-me
           </h2>
-          <div className="w-48 h-px bg-border" />
+          <div className="w-32 sm:w-48 md:w-96 h-px bg-border" />
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <div className="space-y-6 animate-fade-in-up opacity-0" style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}>
-            <p className="text-muted-foreground font-sans leading-relaxed">
+        <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 md:gap-16 items-center">
+          <div className="space-y-6 sm:space-y-8 animate-fade-in-up opacity-0" style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}>
+            <p className="text-muted-foreground font-sans leading-relaxed text-sm sm:text-base">
               Hello! I'm a passionate data scientist with a strong foundation in 
               mathematics, statistics, and computer science. I specialize in 
               transforming raw data into meaningful insights and building 
               predictive models that solve real-world problems.
             </p>
-            <p className="text-muted-foreground font-sans leading-relaxed">
+            <p className="text-muted-foreground font-sans leading-relaxed text-sm sm:text-base">
               My journey in data science began with a curiosity for understanding 
               patterns in complex datasets. Today, I work at the intersection of 
               machine learning, deep learning, and business intelligence.
             </p>
-            <p className="text-muted-foreground font-sans leading-relaxed">
+            <p className="text-muted-foreground font-sans leading-relaxed text-sm sm:text-base">
               When I'm not training models or analyzing data, you can find me 
               contributing to open-source projects, writing technical blogs, or 
               exploring the latest advancements in AI.
             </p>
 
-            <div className="pt-4">
-              <h3 className="text-lg font-mono font-semibold text-foreground mb-4">
+            <div className="pt-2 sm:pt-4">
+              <h3 className="text-base sm:text-lg font-mono font-semibold text-foreground mb-3 sm:mb-4">
                 Current Focus:
               </h3>
-              <ul className="space-y-2">
+              <ul className="space-y-1.5 sm:space-y-2">
                 {[
                   'Large Language Models & RAG Systems',
                   'MLOps & Production ML Pipelines',
                   'Causal Inference & Experimentation',
                   'Real-time ML at Scale',
                 ].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-muted-foreground font-sans">
-                    <span className="w-2 h-2 bg-foreground" />
+                  <li key={item} className="flex items-center gap-3 text-muted-foreground font-sans text-sm sm:text-base">
+                    <span className="w-2 h-2 bg-foreground flex-shrink-0" />
                     {item}
                   </li>
                 ))}
@@ -55,10 +55,10 @@ const AboutSection = () => {
 
           {/* Visual element */}
           <div className="relative animate-fade-in-up opacity-0" style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}>
-            <div className="relative bg-card border border-border rounded-lg p-8 card-shadow">
+            <div className="relative bg-card border border-border rounded-lg p-4 sm:p-6 md:p-8 card-shadow">
               <div className="space-y-6">
                 {/* Code snippet aesthetic */}
-                <div className="font-mono text-sm">
+                <div className="font-mono text-xs sm:text-sm">
                   <div className="text-muted-foreground">
                     <span className="text-foreground">class</span>{' '}
                     <span className="font-semibold">DataScientist</span>:
