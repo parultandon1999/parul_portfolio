@@ -5,6 +5,7 @@ import Navigation from '@/components/Navigation';
 import SocialSidebar from '@/components/SocialSidebar';
 import Footer from '@/components/Footer';
 import { LogOut, Settings, Users, FileText, Briefcase, Award } from 'lucide-react';
+import Button from '@mui/material/Button';
 
 const Admin = () => {
   const { isAuthenticated, isLoading, logout } = useAdminAuth();
@@ -76,16 +77,29 @@ const Admin = () => {
               <h1 className="text-5xl md:text-6xl font-bold text-foreground">
                 <span className="text-muted-foreground">#</span>admin
               </h1>
-              <button
+              <Button
                 onClick={() => {
                   logout();
                   navigate('/');
                 }}
-                className="flex items-center gap-2 px-3 py-1.5 bg-red-500/10 border border-red-500/30 text-red-600 rounded-lg hover:bg-red-500/20 transition-colors font-mono text-xs"
+                variant="outlined"
+                startIcon={<LogOut size={14} />}
+                sx={{
+                  fontFamily: 'monospace',
+                  textTransform: 'none',
+                  fontSize: '0.75rem',
+                  borderColor: 'rgba(239, 68, 68, 0.3)', // border-red-500/30
+                  color: '#dc2626', // text-red-600
+                  bgcolor: 'rgba(239, 68, 68, 0.1)', // bg-red-500/10
+                  borderRadius: '8px',
+                  '&:hover': {
+                    bgcolor: 'rgba(239, 68, 68, 0.2)',
+                    borderColor: 'rgba(239, 68, 68, 0.5)'
+                  }
+                }}
               >
-                <LogOut size={14} />
                 Logout
-              </button>
+              </Button>
             </div>
             <p className="text-lg text-muted-foreground max-w-2xl">
               Welcome to your admin dashboard. Manage all aspects of your portfolio from here.
