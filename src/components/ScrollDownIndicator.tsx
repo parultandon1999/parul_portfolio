@@ -19,11 +19,13 @@ const ScrollDownIndicator = () => {
   };
 
   return (
+
     <div
-      className={`fixed bottom-8 left-1/2 transform -translate-x-1/2 z-40 animate-bounce transition-opacity duration-500 ${
+      className={`fixed bottom-8 left-1/2 z-40 animate-bounce transition-opacity duration-500 ${
         isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
-    >
+      style={{ transform: 'translateX(-50%)' }}
+      >
       <button
         onClick={scrollDown}
         className="flex flex-col items-center gap-2 text-foreground hover:text-muted-foreground transition-colors"
