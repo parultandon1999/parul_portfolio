@@ -164,22 +164,22 @@ const ProjectDemo = () => {
       <SocialSidebar />
       <main className="lg:pl-16">
         {/* Header */}
-        <section className="py-20 border-b border-border">
+        <section className="py-10 border-b border-border">
           <div className="container mx-auto px-6 lg:px-20">
-            <h1 className="text-5xl md:text-6xl font-bold mb-4 text-foreground">
+            <h1 className="text-4xl md:text-5xl font-bold mb-2 text-foreground">
               {demo.title}
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl">
+            <p className="text-lg text-muted-foreground max-w-2xl">
               {demo.subtitle}
             </p>
           </div>
         </section>
 
         {/* Overview */}
-        <section className="py-16 border-b border-border">
+        <section className="py-10 border-b border-border">
           <div className="container mx-auto px-6 lg:px-20">
-            <h2 className="text-3xl font-bold mb-6 text-foreground">Overview</h2>
-            <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl">
+            <h2 className="text-2xl font-bold mb-4 text-foreground">Overview</h2>
+            <p className="text-base text-muted-foreground leading-relaxed max-w-3xl">
               {demo.overview}
             </p>
           </div>

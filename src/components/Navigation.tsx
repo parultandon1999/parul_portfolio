@@ -18,6 +18,26 @@ const Navigation = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const NAVBAR_BLUR = {
+    enabled: true,
+
+    scroll: {
+      blur: 1,
+      saturation: 10,
+      opacity: 0.1,
+    },
+
+    mobile: {
+      blur: 1,
+      saturation: 10,
+      opacity: 0.1,
+    },
+  };
+
+  const isBlurActive = NAVBAR_BLUR.enabled && (scrolled || mobileMenuOpen);
+  const activeBlur = mobileMenuOpen ? NAVBAR_BLUR.mobile : NAVBAR_BLUR.scroll;
+
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -39,8 +59,17 @@ const Navigation = () => {
       position="fixed" 
       elevation={0}
       sx={{
-        backgroundColor: scrolled || mobileMenuOpen ? 'hsl(var(--background) / 0.95)' : 'transparent',
-        backdropFilter: scrolled || mobileMenuOpen ? 'blur(8px)' : 'none',
+        backgroundColor: isBlurActive
+          ? `hsl(var(--background) / ${activeBlur.opacity})`
+          : 'transparent',
+
+        backdropFilter: isBlurActive
+          ? `blur(${activeBlur.blur}px) saturate(${activeBlur.saturation}%)`
+          : 'none',
+
+        WebkitBackdropFilter: isBlurActive
+          ? `blur(${activeBlur.blur}px) saturate(${activeBlur.saturation}%)`
+          : 'none',
         borderBottom: scrolled || mobileMenuOpen ? '1px solid hsl(var(--border))' : 'none',
         transition: 'all 0.3s ease-in-out',
         color: 'hsl(var(--foreground))',

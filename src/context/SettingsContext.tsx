@@ -114,9 +114,9 @@ const defaultThemeSettings: ThemeSettings = {
   fontFamily: 'system-ui',
   defaultTheme: 'system',
   scrollBarEnabled: true,
-  scrollBarColor: '#ec4899',
-  scrollBarLight: '#ec4899',
-  scrollBarDark: '#ec4899',
+  scrollBarColor: '#52434aff',
+  scrollBarLight: '#000000ff',
+  scrollBarDark: '#ffffffff',
   goToTopEnabled: true,
   goToTopPosition: 'bottom-right',
   goToTopLight: {
