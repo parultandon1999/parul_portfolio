@@ -157,7 +157,7 @@ const HeroSection = () => {
                 <img 
                   src="/pic.png" 
                   alt="Profile" 
-                  className="w-full h-full object-cover opacity-70 pointer-events-none select-none"
+                  className="w-full h-full object-cover opacity-90 pointer-events-none select-none"
                   draggable={false}
                   onContextMenu={(e) => e.preventDefault()}
                 />
