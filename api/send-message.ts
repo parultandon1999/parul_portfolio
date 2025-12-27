@@ -1,6 +1,10 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import nodemailer from 'nodemailer';
+import dns from 'dns';
+import { promisify } from 'util';
 import { canSendEmail, recordSubmission } from './utils/rateLimit';
+
+const resolveMx = promisify(dns.resolveMx);
 
 // Configure your email service here
 // Using Gmail as example (you can use any email service)
@@ -11,6 +15,20 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASSWORD,
   },
 });
+
+// Validate email domain has MX records
+async function validateEmailDomain(email: string): Promise<boolean> {
+  try {
+    const domain = email.split('@')[1];
+    if (!domain) return false;
+    
+    const mxRecords = await resolveMx(domain);
+    return mxRecords && mxRecords.length > 0;
+  } catch (error) {
+    console.error(`Error validating domain for ${email}:`, error);
+    return false;
+  }
+}
 
 export default async function handler(
   req: VercelRequest,
@@ -28,10 +46,16 @@ export default async function handler(
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
-  // Email validation - basic format only
+  // Email format validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    return res.status(400).json({ error: 'Invalid email address' });
+    return res.status(400).json({ error: 'Invalid email format' });
+  }
+
+  // Email domain validation
+  const domainValid = await validateEmailDomain(email);
+  if (!domainValid) {
+    return res.status(400).json({ error: 'Email domain does not exist or has no mail servers' });
   }
 
   // Check rate limit
