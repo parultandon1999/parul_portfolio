@@ -15,7 +15,7 @@ export const PageLoader = () => {
     // Hide loader after page loads
     const timer = setTimeout(() => {
       setIsVisible(false);
-    }, 3000);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, [location.pathname]);
