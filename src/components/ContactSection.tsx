@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Mail, MapPin, Send } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const ContactSection = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -129,11 +131,6 @@ const ContactSection = () => {
                 <span className="font-mono text-sm sm:text-base">San Francisco, CA</span>
               </div>
             </div>
-
-            <Button variant="default" size="lg" className="group w-full sm:w-auto">
-              Send a Message
-              <Send className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-            </Button>
           </div>
 
           {/* Contact form */}

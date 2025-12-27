@@ -1,8 +1,41 @@
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Download } from 'lucide-react';
 import DataScienceBackground from '@/components/DataScienceBackground';
+import { toast } from '@/components/ui/sonner';
 
 const HeroSection = () => {
+
+  const handleDownloadCV = async () => {
+    try {
+      const response = await fetch('/resume.pdf');
+      
+      if (!response.ok) {
+        toast.error('CV not available');
+        return;
+      }
+
+      const blob = await response.blob();
+      
+      // Check if file is empty (0 bytes)
+      if (blob.size === 0) {
+        toast.error('CV not available');
+        return;
+      }
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'resume.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.success('CV downloaded successfully!');
+    } catch (error) {
+      toast.error('CV not available');
+    }
+  };
   return (
     <section id="home" className="min-h-screen flex items-center relative overflow-hidden pt-20 sm:pt-0">
       {/* Data Science Background Visualizations */}
@@ -33,14 +66,17 @@ const HeroSection = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 animate-fade-in-up opacity-0" style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}>
-              <Button variant="default" size="lg" className="group w-full sm:w-auto">
+              <a href="/contact" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-foreground text-background rounded-lg font-mono hover:bg-foreground/90 transition-colors w-full sm:w-auto group">
                 Contact Me
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              <Button variant="outline" size="lg" className="w-full sm:w-auto">
+              </a>
+              <button 
+                onClick={handleDownloadCV}
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-foreground rounded-lg font-mono hover:bg-secondary transition-colors w-full sm:w-auto"
+              >
                 <Download className="w-4 h-4" />
                 Download CV
-              </Button>
+              </button>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 pt-4 animate-fade-in-up opacity-0" style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}>
