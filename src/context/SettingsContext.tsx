@@ -39,8 +39,16 @@ export interface ThemeSettings {
     maxSize: number;
     speed: number;
     glowIntensity: number;
-    colorsLight: string[];
-    colorsDark: string[];
+    dotsLight: Array<{
+      color: string;
+      glowColor: string;
+      hoverColor: string;
+    }>;
+    dotsDark: Array<{
+      color: string;
+      glowColor: string;
+      hoverColor: string;
+    }>;
   };
 }
 
@@ -60,7 +68,7 @@ export interface SiteConfiguration {
 }
 
 export interface AdminPreferences {
-  sessionTimeout: number; // in minutes
+  sessionTimeout: number;
   enableTwoFactor: boolean;
   lastPasswordChange: string;
 }
@@ -87,7 +95,9 @@ interface SettingsContextType {
   updateGoToTopPosition: (position: 'bottom-right' | 'bottom-left' | 'bottom-center') => void;
   updateGoToTopEnabled: (enabled: boolean) => void;
   updateDotsAnimation: (dotsConfig: typeof defaultThemeSettings.dotsAnimation) => void;
-  updateDotsColors: (mode: 'light' | 'dark', colors: string[]) => void;
+  updateDotStyle: (mode: 'light' | 'dark', index: number, dotStyle: typeof defaultThemeSettings.dotsAnimation.dotsLight[0]) => void;
+  addDotStyle: (mode: 'light' | 'dark', dotStyle: typeof defaultThemeSettings.dotsAnimation.dotsLight[0]) => void;
+  removeDotStyle: (mode: 'light' | 'dark', index: number) => void;
   resetThemeToDefaults: () => void;
   exportData: () => string;
   importData: (jsonData: string) => boolean;
@@ -136,8 +146,26 @@ const defaultThemeSettings: ThemeSettings = {
     maxSize: 2,
     speed: 1,
     glowIntensity: 1,
-    colorsLight: ['#FFB7B2', '#FF69B4', '#E6E6FA', '#F0F8FF', '#FFFACD', '#FFFFFF', '#FF1493', '#E0B0FF'],
-    colorsDark: ['#FFB7B2', '#FF69B4', '#E6E6FA', '#F0F8FF', '#FFFACD', '#FFFFFF', '#FF1493', '#E0B0FF'],
+    dotsLight: [
+      { color: '#FFB7B2', glowColor: '#FF69B4', hoverColor: '#FF1493' },
+      { color: '#FF69B4', glowColor: '#FF1493', hoverColor: '#C71585' },
+      { color: '#E6E6FA', glowColor: '#E0B0FF', hoverColor: '#DA70D6' },
+      { color: '#F0F8FF', glowColor: '#87CEEB', hoverColor: '#4169E1' },
+      { color: '#FFFACD', glowColor: '#FFD700', hoverColor: '#FFA500' },
+      { color: '#FFFFFF', glowColor: '#F0F8FF', hoverColor: '#E6E6FA' },
+      { color: '#FF1493', glowColor: '#FF69B4', hoverColor: '#FFB6C1' },
+      { color: '#E0B0FF', glowColor: '#DA70D6', hoverColor: '#BA55D3' },
+    ],
+    dotsDark: [
+      { color: '#FFB7B2', glowColor: '#FF69B4', hoverColor: '#FF1493' },
+      { color: '#FF69B4', glowColor: '#FF1493', hoverColor: '#C71585' },
+      { color: '#E6E6FA', glowColor: '#E0B0FF', hoverColor: '#DA70D6' },
+      { color: '#F0F8FF', glowColor: '#87CEEB', hoverColor: '#4169E1' },
+      { color: '#FFFACD', glowColor: '#FFD700', hoverColor: '#FFA500' },
+      { color: '#FFFFFF', glowColor: '#F0F8FF', hoverColor: '#E6E6FA' },
+      { color: '#FF1493', glowColor: '#FF69B4', hoverColor: '#FFB6C1' },
+      { color: '#E0B0FF', glowColor: '#DA70D6', hoverColor: '#BA55D3' },
+    ],
   },
 };
 
@@ -171,7 +199,6 @@ const defaultSettingsData: SettingsData = {
 export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [settingsData, setSettingsData] = useState<SettingsData>(defaultSettingsData);
 
-  // Load from localStorage on mount
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
@@ -183,13 +210,11 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, []);
 
-  // Save to localStorage whenever settings change
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settingsData));
   }, [settingsData]);
 
-  // Apply theme colors to CSS variables
-  useEffect(() => {locationbar
+  useEffect(() => {
     const root = document.documentElement;
     root.style.setProperty('--color-primary', settingsData.theme.primaryColor);
     root.style.setProperty('--color-secondary', settingsData.theme.secondaryColor);
@@ -337,14 +362,45 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     });
   };
 
-  const updateDotsColors = (mode: 'light' | 'dark', colors: string[]) => {
+  const updateDotStyle = (mode: 'light' | 'dark', index: number, dotStyle: typeof defaultThemeSettings.dotsAnimation.dotsLight[0]) => {
+    const key = `dots${mode.charAt(0).toUpperCase() + mode.slice(1)}` as 'dotsLight' | 'dotsDark';
+    const newDots = [...settingsData.theme.dotsAnimation[key]];
+    newDots[index] = dotStyle;
     setSettingsData({
       ...settingsData,
       theme: {
         ...settingsData.theme,
         dotsAnimation: {
           ...settingsData.theme.dotsAnimation,
-          [`colors${mode.charAt(0).toUpperCase() + mode.slice(1)}`]: colors,
+          [key]: newDots,
+        },
+      },
+    });
+  };
+
+  const addDotStyle = (mode: 'light' | 'dark', dotStyle: typeof defaultThemeSettings.dotsAnimation.dotsLight[0]) => {
+    const key = `dots${mode.charAt(0).toUpperCase() + mode.slice(1)}` as 'dotsLight' | 'dotsDark';
+    setSettingsData({
+      ...settingsData,
+      theme: {
+        ...settingsData.theme,
+        dotsAnimation: {
+          ...settingsData.theme.dotsAnimation,
+          [key]: [...settingsData.theme.dotsAnimation[key], dotStyle],
+        },
+      },
+    });
+  };
+
+  const removeDotStyle = (mode: 'light' | 'dark', index: number) => {
+    const key = `dots${mode.charAt(0).toUpperCase() + mode.slice(1)}` as 'dotsLight' | 'dotsDark';
+    setSettingsData({
+      ...settingsData,
+      theme: {
+        ...settingsData.theme,
+        dotsAnimation: {
+          ...settingsData.theme.dotsAnimation,
+          [key]: settingsData.theme.dotsAnimation[key].filter((_, i) => i !== index),
         },
       },
     });
@@ -393,7 +449,9 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         updateGoToTopPosition,
         updateGoToTopEnabled,
         updateDotsAnimation,
-        updateDotsColors,
+        updateDotStyle,
+        addDotStyle,
+        removeDotStyle,
         resetThemeToDefaults,
         exportData,
         importData,

@@ -470,57 +470,83 @@ const AdminSettings = () => {
                             ))}
                         </div>
 
-                        {/* Colors */}
+                        {/* Colors - Light and Dark Mode */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-border/50">
                             {[
-                                { label: 'Light Mode Colors', colors: themeForm.dotsAnimation.colorsLight, key: 'colorsLight' },
-                                { label: 'Dark Mode Colors', colors: themeForm.dotsAnimation.colorsDark, key: 'colorsDark' }
-                            ].map(section => (
-                                <div key={section.key}>
-                                    <h5 className="text-xs font-bold mb-2">{section.label}</h5>
-                                    <div className="flex flex-wrap gap-2">
-                                        {section.colors.map((color, index) => (
-                                            <input
-                                                key={index}
-                                                type="color"
-                                                value={color}
-                                                onChange={(e) => {
-                                                    const newColors = [...section.colors];
-                                                    newColors[index] = e.target.value;
-                                                    setThemeForm({
-                                                        ...themeForm,
-                                                        dotsAnimation: { ...themeForm.dotsAnimation, [section.key]: newColors }
-                                                    });
-                                                }}
-                                                className="w-6 h-6 rounded-full cursor-pointer border border-border p-0"
-                                            />
-                                        ))}
-                                         <button
-                                            onClick={() => {
-                                                setThemeForm({
-                                                ...themeForm,
-                                                dotsAnimation: { ...themeForm.dotsAnimation, [section.key]: [...section.colors, '#FF69B4'] }
-                                                });
-                                            }}
-                                            className="w-6 h-6 flex items-center justify-center bg-secondary border border-border rounded-full text-xs hover:bg-foreground hover:text-background"
-                                        >
-                                            +
-                                        </button>
-                                        {section.colors.length > 1 && (
-                                             <button
-                                                onClick={() => {
-                                                    const newColors = section.colors.slice(0, -1);
-                                                    setThemeForm({
-                                                        ...themeForm,
-                                                        dotsAnimation: { ...themeForm.dotsAnimation, [section.key]: newColors }
-                                                    });
-                                                }}
-                                                className="w-6 h-6 flex items-center justify-center bg-red-500/20 border border-red-500/50 text-red-500 rounded-full text-xs hover:bg-red-500 hover:text-white"
-                                            >
-                                                -
-                                            </button>
-                                        )}
+                                { mode: 'Light', icon: Sun, dots: themeForm.dotsAnimation.dotsLight, key: 'dotsLight' },
+                                { mode: 'Dark', icon: Moon, dots: themeForm.dotsAnimation.dotsDark, key: 'dotsDark' }
+                            ].map((section) => (
+                                <div key={section.key} className="space-y-3">
+                                    <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground">
+                                        <section.icon size={12} />
+                                        {section.mode} Mode Dots
                                     </div>
+                                    <div className="space-y-2 max-h-96 overflow-y-auto">
+                                        {section.dots.map((dot, index) => (
+                                            <div key={index} className="p-3 bg-secondary/50 rounded-lg border-2 border-border/50 space-y-2 hover:border-foreground/30 transition-colors">
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <span className="text-xs font-mono text-muted-foreground font-bold">Dot {index + 1}</span>
+                                                    <div className="flex gap-2">
+                                                        <button
+                                                            onClick={() => {
+                                                                const newDots = section.dots.filter((_, i) => i !== index);
+                                                                setThemeForm({
+                                                                    ...themeForm,
+                                                                    dotsAnimation: { ...themeForm.dotsAnimation, [section.key]: newDots }
+                                                                });
+                                                            }}
+                                                            className="text-xs px-2 py-1 bg-red-500/20 border border-red-500/50 text-red-500 rounded hover:bg-red-500 hover:text-white transition-colors"
+                                                        >
+                                                            Remove
+                                                        </button>
+                                                        <button
+                                                            className="text-xs px-2 py-1 bg-green-500/20 border border-green-500/50 text-green-600 rounded hover:bg-green-500 hover:text-white transition-colors"
+                                                        >
+                                                            Select
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div className="grid grid-cols-3 gap-3">
+                                                    {[
+                                                        { label: 'Color', key: 'color' },
+                                                        { label: 'Glow', key: 'glowColor' },
+                                                        { label: 'Hover', key: 'hoverColor' }
+                                                    ].map((field) => (
+                                                        <div key={field.key} className="space-y-1">
+                                                            <label className="text-xs font-mono text-muted-foreground block">{field.label}</label>
+                                                            <input
+                                                                type="color"
+                                                                value={(dot as any)[field.key]}
+                                                                onChange={(e) => {
+                                                                    const newDots = [...section.dots];
+                                                                    newDots[index] = { ...dot, [field.key]: e.target.value };
+                                                                    setThemeForm({
+                                                                        ...themeForm,
+                                                                        dotsAnimation: { ...themeForm.dotsAnimation, [section.key]: newDots }
+                                                                    });
+                                                                }}
+                                                                className="w-full h-12 rounded cursor-pointer border-2 border-border p-1"
+                                                            />
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <button
+                                        onClick={() => {
+                                            setThemeForm({
+                                                ...themeForm,
+                                                dotsAnimation: { 
+                                                    ...themeForm.dotsAnimation, 
+                                                    [section.key]: [...section.dots, { color: '#FF69B4', glowColor: '#FF1493', hoverColor: '#C71585' }] 
+                                                }
+                                            });
+                                        }}
+                                        className="w-full px-3 py-2 bg-secondary border-2 border-dashed border-border rounded text-sm hover:bg-foreground hover:text-background hover:border-foreground transition-all"
+                                    >
+                                        + Add Dot Style
+                                    </button>
                                 </div>
                             ))}
                         </div>

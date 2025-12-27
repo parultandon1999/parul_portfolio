@@ -47,14 +47,12 @@ const InteractiveDot = ({
   isScattering,
   speed,
   glowIntensity,
-  colorPalette
 }: { 
   config: DotConfig; 
   mouseRef: React.MutableRefObject<{ x: number; y: number }>;
   isScattering: boolean;
   speed: number;
   glowIntensity: number;
-  colorPalette: string[];
 }) => {
   const dotRef = useRef<HTMLDivElement>(null);
   const positionRef = useRef({ x: config.initialX, y: config.initialY });
@@ -216,7 +214,7 @@ const DataScienceBackground = () => {
 
   const dotsConfig = settingsData.theme.dotsAnimation;
   const isLight = theme === 'light';
-  const colorPalette = isLight ? dotsConfig.colorsLight : dotsConfig.colorsDark;
+  const dotStyles = isLight ? dotsConfig.dotsLight : dotsConfig.dotsDark;
 
   // 1. Initialize Line Chart Background
   useEffect(() => {
@@ -235,12 +233,11 @@ const DataScienceBackground = () => {
     const DOT_COUNT = dotsConfig.dotCount;
     
     const initialDots: DotConfig[] = Array.from({ length: DOT_COUNT }, (_, i) => {
+      const dotStyle = dotStyles[i % dotStyles.length];
       return {
         id: i,
-        // Use min and max size from settings
         size: randomRange(dotsConfig.minSize, dotsConfig.maxSize), 
-        color: randomColor(colorPalette), // Use the colorPalette from settings
-        // Random position across the entire screen
+        color: dotStyle.color,
         initialX: Math.random() * window.innerWidth,
         initialY: Math.random() * window.innerHeight,
         mass: randomRange(1.5, 3), 
@@ -273,7 +270,7 @@ const DataScienceBackground = () => {
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchstart', handleTouchMove);
     };
-  }, [dotsConfig.dotCount, dotsConfig.minSize, dotsConfig.maxSize]);
+  }, [dotsConfig.dotCount, dotsConfig.minSize, dotsConfig.maxSize, dotStyles]);
 
   // 3. Handle Route Scattering
   useEffect(() => {
@@ -335,7 +332,6 @@ const DataScienceBackground = () => {
             isScattering={isScattering}
             speed={dotsConfig.speed}
             glowIntensity={dotsConfig.glowIntensity}
-            colorPalette={colorPalette}
           />
         ))}
       </div>
