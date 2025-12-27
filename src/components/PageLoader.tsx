@@ -15,7 +15,7 @@ export const PageLoader = () => {
     // Hide loader after page loads
     const timer = setTimeout(() => {
       setIsVisible(false);
-    }, 2000);
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, [location.pathname]);
@@ -23,16 +23,16 @@ export const PageLoader = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 bg-background z-[9999] flex items-center justify-center">
-      {/* Animated dots */}
-      <div className="flex gap-3">
-        {[0, 1, 2].map((i) => (
-          <div
-            key={i}
-            className="w-3 h-3 bg-foreground rounded-full animate-bounce"
-            style={{ animationDelay: `${i * 0.1}s` }}
-          />
-        ))}
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-[2px] z-[9999] flex items-center justify-center">
+      <div className="relative flex items-center justify-center">
+        {/* Outer Ring: Slow rotation, subtle opacity */}
+        <div className="w-16 h-16 rounded-full border-2 border-white/10 border-t-white/80 animate-[spin_1.5s_linear_infinite]" />
+        
+        {/* Inner Ring: Faster counter-rotation, accent color (Cyan) */}
+        <div className="absolute w-10 h-10 rounded-full border-2 border-transparent border-b-cyan-400 animate-[spin_1s_linear_infinite_reverse]" />
+        
+        {/* Core: Gentle pulse */}
+        <div className="absolute w-2 h-2 bg-cyan-400 rounded-full animate-pulse shadow-[0_0_15px_rgba(34,211,238,0.6)]" />
       </div>
     </div>
   );

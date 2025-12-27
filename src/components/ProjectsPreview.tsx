@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
 import { useProjects } from '@/context/ProjectsContext';
 import { ArrowRight } from 'lucide-react';
 import DataScienceBackground from './DataScienceBackground';
+import Button from '@mui/material/Button';
 
 const ProjectsPreview = () => {
   const { projects } = useProjects();
@@ -14,7 +14,7 @@ const ProjectsPreview = () => {
   return (
     <section className="py-24 border-b border-border relative overflow-hidden">
       {/* Background Animation */}
-      <div className="absolute inset-0 opacity-30">
+      <div className="absolute inset-0 opacity-100">
         <DataScienceBackground />
       </div>
 
@@ -35,7 +35,7 @@ const ProjectsPreview = () => {
             <a
               key={project.id}
               href={`/projects/${project.id}`}
-              className="group border border-border rounded-lg overflow-hidden hover:border-foreground/50 transition-all duration-300 hover:shadow-lg"
+              className="group border border-border rounded-lg overflow-hidden hover:border-foreground/50 transition-all duration-300 hover:shadow-lg bg-background"
             >
               {/* Project Card */}
               <div className="h-full flex flex-col">
@@ -91,16 +91,33 @@ const ProjectsPreview = () => {
         {/* View All Button */}
         {projects.length > 3 && (
           <div className="flex justify-center">
-            <a
-              href="/projects"
-              onClick={() => {
-                // Clear saved scroll position so it loads from top
-                sessionStorage.removeItem('projects-scroll');
-              }}
-              className="px-6 sm:px-8 py-2.5 sm:py-3 border border-foreground text-foreground rounded-lg font-mono text-sm sm:text-base hover:bg-foreground hover:text-background transition-colors cursor-pointer"
-            >
-              View All Projects
-            </a>
+          <Button 
+            variant="contained" 
+            href="/projects"
+            onClick={() => {
+              sessionStorage.removeItem('projects-scroll');
+            }}
+            sx={{
+              backgroundColor: 'hsl(var(--foreground))', // Uses your Tailwind var
+              color: 'hsl(var(--background))',           // Uses your Tailwind var
+              fontFamily: 'monospace',                   // Matches your font-mono
+              textTransform: 'none',                     // Removes the default ALL CAPS
+              fontSize: { xs: '0.875rem', sm: '1rem' },
+              fontWeight: 500,
+              padding: '10px 24px',
+              borderRadius: '8px',                       // Matches rounded-lg
+              boxShadow: 'none',
+              border: '1px solid hsl(var(--foreground))',
+              '&:hover': {
+                backgroundColor: 'hsl(var(--foreground) / 0.9)', 
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                transform: 'translateY(-1px)',
+              },
+              transition: 'all 0.2s ease-in-out',
+            }}
+          >
+            View All Projects
+          </Button>
           </div>
         )}
       </div>

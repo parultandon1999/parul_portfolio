@@ -1,6 +1,8 @@
 import { ArrowRight, Download } from 'lucide-react';
 import DataScienceBackground from '@/components/DataScienceBackground';
 import { toast } from '@/components/ui/sonner';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 
 const HeroSection = () => {
 
@@ -65,17 +67,66 @@ const HeroSection = () => {
             </p>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-4 animate-fade-in-up opacity-0" style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}>
-              <a href="/contact" className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-foreground text-background rounded-lg font-mono text-sm sm:text-base hover:bg-foreground/90 transition-colors w-full sm:w-auto group">
-                Contact Me
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </a>
-              <button 
-                onClick={handleDownloadCV}
-                className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 border border-border text-foreground rounded-lg font-mono text-sm sm:text-base hover:bg-secondary transition-colors w-full sm:w-auto"
+              {/* Buttons Container */}
+              <Stack 
+                direction={{ xs: 'column', sm: 'row' }} 
+                spacing={{ xs: 2, sm: 3 }} 
+                alignItems="stretch"
+                className="animate-fade-in-up opacity-0" 
+                style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}
               >
-                <Download className="w-4 h-4" />
-                Download CV
-              </button>
+                {/* Primary Button: Contact Me */}
+                <Button 
+                  variant="contained" 
+                  href="/contact"
+                  endIcon={<ArrowRight size={18} />}
+                  sx={{
+                    backgroundColor: 'hsl(var(--foreground))', // Uses your Tailwind var
+                    color: 'hsl(var(--background))',           // Uses your Tailwind var
+                    fontFamily: 'monospace',                   // Matches your font-mono
+                    textTransform: 'none',                     // Removes the default ALL CAPS
+                    fontSize: { xs: '0.875rem', sm: '1rem' },
+                    fontWeight: 500,
+                    padding: '10px 24px',
+                    borderRadius: '8px',                       // Matches rounded-lg
+                    boxShadow: 'none',
+                    border: '1px solid hsl(var(--foreground))',
+                    '&:hover': {
+                      backgroundColor: 'hsl(var(--foreground) / 0.9)', 
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                      transform: 'translateY(-1px)',
+                    },
+                    transition: 'all 0.2s ease-in-out',
+                  }}
+                >
+                  Contact Me
+                </Button>
+
+                {/* Secondary Button: Download CV */}
+                <Button 
+                  variant="outlined" 
+                  onClick={handleDownloadCV}
+                  startIcon={<Download size={18} />}
+                  sx={{
+                    borderColor: 'hsl(var(--border))',         // Uses your Tailwind var
+                    color: 'hsl(var(--foreground))',           // Uses your Tailwind var
+                    fontFamily: 'monospace',
+                    textTransform: 'none',
+                    fontSize: { xs: '0.875rem', sm: '1rem' },
+                    fontWeight: 500,
+                    padding: '10px 24px',
+                    borderRadius: '8px',
+                    backgroundColor: 'transparent',
+                    '&:hover': {
+                      borderColor: 'hsl(var(--foreground))',
+                      backgroundColor: 'hsl(var(--secondary))', 
+                    },
+                    transition: 'all 0.2s ease-in-out',
+                  }}
+                >
+                  Download CV
+                </Button>
+              </Stack>
             </div>
 
             <div className="flex flex-col gap-4 sm:flex-row sm:gap-8 pt-2 sm:pt-4 animate-fade-in-up opacity-0" style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}>

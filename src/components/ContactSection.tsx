@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import Button from '@mui/material/Button';
 import { Mail, MapPin, Send } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -212,12 +212,39 @@ const ContactSection = () => {
                     ✗ Error sending message. Please try again.
                   </div>
                 )}
+                <Button
+                  type="submit"
+                  fullWidth
+                  disabled={
+                    isSubmitting ||
+                    (remainingAttempts !== null && remainingAttempts <= 0) ||
+                    !!emailError
+                  }
+                  sx={{
+                    backgroundColor: 'hsl(var(--foreground))',
+                    color: 'hsl(var(--background))',
+                    fontFamily: 'monospace',
+                    textTransform: 'none',
+                    fontSize: '1rem',
+                    fontWeight: 500,
+                    height: '48px',
+                    borderRadius: '8px',
+                    boxShadow: 'none',
+                    border: '1px solid hsl(var(--foreground))',
 
-                <Button 
-                  type="submit" 
-                  className="w-full" 
-                  size="lg" 
-                  disabled={isSubmitting || (remainingAttempts !== null && remainingAttempts <= 0) || !!emailError}
+                    '&:hover': {
+                      backgroundColor: 'hsl(var(--foreground) / 0.9)',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                      transform: 'translateY(-1px)',
+                    },
+
+                    '&.Mui-disabled': {
+                      backgroundColor: 'hsl(var(--foreground))',
+                      color: 'hsl(var(--background))',
+                      WebkitTextFillColor: 'hsl(var(--background))',
+                      opacity: 1,
+                    },
+                  }}
                 >
                   {isSubmitting ? 'Sending...' : 'Submit'}
                 </Button>

@@ -26,7 +26,7 @@ const Navigation = () => {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-background/30 backdrop-blur-sm border-b border-border' : ''
+        scrolled ? 'bg-background/20 backdrop-blur-sm border-b border-border' : ''
       }`}
     >
       <div className="container mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
@@ -43,7 +43,7 @@ const Navigation = () => {
             <a
               key={link.href}
               href={link.href}
-              className="font-mono text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
+              className="font-mono text-xs sm:text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
             >
               {link.label}
             </a>
