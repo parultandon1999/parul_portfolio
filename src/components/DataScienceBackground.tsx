@@ -286,42 +286,6 @@ const DataScienceBackground = () => {
   return (
     // TRANSPARENT BACKGROUND: No bg-color class, so it overlays on your existing page
     <div className="fixed inset-0 overflow-hidden pointer-events-none">
-
-      {/* SVG Background Decoration */}
-      <svg
-        className="absolute top-20 right-10 w-96 h-48 opacity-30 pointer-events-none"
-        viewBox="0 0 350 120"
-      >
-        <defs>
-          <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#E6E6FA" stopOpacity="0.1" />
-            <stop offset="100%" stopColor="#FF69B4" stopOpacity="0.5" />
-          </linearGradient>
-        </defs>
-        <polyline
-          fill="none"
-          stroke="url(#lineGradient)"
-          strokeWidth="4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          points={linePoints}
-          className="animate-pulse"
-        />
-        {linePoints.split(' ').map((point, i) => {
-          const [x, y] = point.split(',').map(Number);
-          return (
-            <circle
-              key={i}
-              cx={x}
-              cy={y}
-              r="4"
-              fill="#FFB6C1"
-              className="opacity-30"
-            />
-          );
-        })}
-      </svg>
-
       {/* Interactive Dots */}
       <div className="absolute inset-0 w-full h-full">
         {dots.map((dot) => (
