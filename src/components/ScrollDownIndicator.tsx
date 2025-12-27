@@ -19,19 +19,17 @@ const ScrollDownIndicator = () => {
   };
 
   return (
-
     <div
-      className={`fixed bottom-8 left-1/2 z-40 animate-bounce transition-opacity duration-500 ${
+      className={`fixed bottom-8 z-40 animate-bounce transition-opacity duration-500 w-full flex justify-center ${
         isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
-      style={{ transform: 'translateX(-50%)' }}
-      >
+    >
       <button
         onClick={scrollDown}
         className="flex flex-col items-center gap-2 text-foreground hover:text-muted-foreground transition-colors"
         aria-label="Scroll down"
       >
-        <span className="text-xs font-mono uppercase tracking-wider">Scroll</span>
+        <span className="text-xs font-mono uppercase tracking-wider"></span>
         <ChevronDown className="w-5 h-5" />
       </button>
     </div>
