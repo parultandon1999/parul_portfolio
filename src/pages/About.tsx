@@ -1,11 +1,11 @@
 import Navigation from '@/components/Navigation';
 import SocialSidebar from '@/components/SocialSidebar';
 import Footer from '@/components/Footer';
-
 import { useAbout } from '@/context/AboutContext';
 import { Heart } from 'lucide-react';
 import { useEffect } from 'react';
 import ScrollDownIndicator from '@/components/ScrollDownIndicator';
+import Button from '@mui/material/Button';
 
 const About = () => {
   // Save scroll position when leaving
@@ -25,26 +25,8 @@ const About = () => {
       }, 500);
     }
   }, []);
-  const { aboutData } = useAbout(); [
-    {
-      year: '2019',
-      title: 'Started Data Science Journey',
-      description: 'Began learning Python and machine learning fundamentals. First projects in data analysis and visualization.',
-      icon: '🚀',
-    },
-  ];
 
-  const values = [
-    {
-      icon: <Heart className="w-8 h-8" />,
-      title: 'Passion for Data',
-      description: 'I believe data tells stories. My mission is to uncover insights that drive meaningful business decisions.',
-    },
-  ];
-
-  const interests = [
-    'Machine Learning',
-  ];
+  const { aboutData } = useAbout();
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -188,18 +170,47 @@ const About = () => {
               {aboutData.ctaDescription}
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <a
+              <Button
                 href="#contact"
-                className="px-6 py-2 bg-foreground text-background rounded-lg font-mono text-sm hover:bg-foreground/90 transition-colors"
+                variant="contained"
+                sx={{
+                  bgcolor: 'hsl(var(--foreground))',
+                  color: 'hsl(var(--background))',
+                  fontFamily: 'monospace',
+                  textTransform: 'none',
+                  fontSize: '0.875rem',
+                  px: 3,
+                  py: 1,
+                  borderRadius: '8px',
+                  boxShadow: 'none',
+                  '&:hover': { 
+                    bgcolor: 'hsl(var(--foreground) / 0.9)',
+                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                  }
+                }}
               >
                 Get in Touch
-              </a>
-              <a
+              </Button>
+              <Button
                 href="/projects"
-                className="px-6 py-2 border border-foreground text-foreground rounded-lg font-mono text-sm hover:bg-foreground/10 transition-colors"
+                variant="outlined"
+                sx={{
+                  borderColor: 'hsl(var(--foreground))',
+                  color: 'hsl(var(--foreground))',
+                  fontFamily: 'monospace',
+                  textTransform: 'none',
+                  fontSize: '0.875rem',
+                  px: 3,
+                  py: 1,
+                  borderRadius: '8px',
+                  '&:hover': {
+                    bgcolor: 'hsl(var(--foreground) / 0.05)',
+                    borderColor: 'hsl(var(--foreground))'
+                  }
+                }}
               >
                 View My Work
-              </a>
+              </Button>
             </div>
           </div>
         </section>

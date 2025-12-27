@@ -5,6 +5,7 @@ import SocialSidebar from '@/components/SocialSidebar';
 import Footer from '@/components/Footer';
 import ProjectImageGallery from '@/components/ProjectImageGallery';
 import { useEffect } from 'react';
+import Button from '@mui/material/Button';
 
 const ProjectDemo = () => {
 
@@ -246,24 +247,67 @@ const ProjectDemo = () => {
           <div className="container mx-auto px-6 lg:px-20">
             <h2 className="text-3xl font-bold mb-8 text-foreground">Resources</h2>
             <div className="flex flex-wrap gap-6">
-              <a
+              <Button
                 href={demo.links.github}
-                className="px-6 py-3 bg-foreground text-background rounded-lg font-mono hover:bg-foreground/90 transition-colors"
+                variant="contained"
+                sx={{
+                  bgcolor: 'hsl(var(--foreground))',
+                  color: 'hsl(var(--background))',
+                  fontFamily: 'monospace',
+                  textTransform: 'none',
+                  fontSize: '1rem',
+                  px: 3,
+                  py: 1.5,
+                  borderRadius: '8px',
+                  boxShadow: 'none',
+                  '&:hover': { 
+                    bgcolor: 'hsl(var(--foreground) / 0.9)',
+                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'
+                  }
+                }}
               >
                 View on GitHub
-              </a>
-              <a
+              </Button>
+              <Button
                 href={demo.links.demo}
-                className="px-6 py-3 border border-foreground text-foreground rounded-lg font-mono hover:bg-foreground/10 transition-colors"
+                variant="outlined"
+                sx={{
+                  borderColor: 'hsl(var(--foreground))',
+                  color: 'hsl(var(--foreground))',
+                  fontFamily: 'monospace',
+                  textTransform: 'none',
+                  fontSize: '1rem',
+                  px: 3,
+                  py: 1.5,
+                  borderRadius: '8px',
+                  '&:hover': {
+                    bgcolor: 'hsl(var(--foreground) / 0.05)',
+                    borderColor: 'hsl(var(--foreground))'
+                  }
+                }}
               >
                 Live Demo
-              </a>
-              <a
+              </Button>
+              <Button
                 href={demo.links.paper}
-                className="px-6 py-3 border border-foreground text-foreground rounded-lg font-mono hover:bg-foreground/10 transition-colors"
+                variant="outlined"
+                sx={{
+                  borderColor: 'hsl(var(--foreground))',
+                  color: 'hsl(var(--foreground))',
+                  fontFamily: 'monospace',
+                  textTransform: 'none',
+                  fontSize: '1rem',
+                  px: 3,
+                  py: 1.5,
+                  borderRadius: '8px',
+                  '&:hover': {
+                    bgcolor: 'hsl(var(--foreground) / 0.05)',
+                    borderColor: 'hsl(var(--foreground))'
+                  }
+                }}
               >
                 Research Paper
-              </a>
+              </Button>
             </div>
           </div>
         </section>
