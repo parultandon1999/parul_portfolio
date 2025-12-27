@@ -4,13 +4,13 @@ import { promisify } from 'util';
 const resolveMx = promisify(dns.resolveMx);
 
 // Basic format validation
-export function isValidEmailFormat(email) {
+export function isValidEmailFormat(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
 
 // Check if domain has valid MX records (mail servers)
-export async function isValidEmailDomain(email) {
+export async function isValidEmailDomain(email: string): Promise<boolean> {
   try {
     const domain = email.split('@')[1];
     
@@ -24,14 +24,14 @@ export async function isValidEmailDomain(email) {
     // If MX records exist, domain is valid
     return mxRecords && mxRecords.length > 0;
   } catch (error) {
-    console.error(`Error validating domain for ${email}:`, error.message);
+    console.error(`Error validating domain for ${email}:`, error);
     // If we can't check, assume it's invalid to be safe
     return false;
   }
 }
 
 // Complete email validation
-export async function validateEmail(email) {
+export async function validateEmail(email: string): Promise<{ valid: boolean; reason: string }> {
   // Step 1: Check format
   if (!isValidEmailFormat(email)) {
     return {

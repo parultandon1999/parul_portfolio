@@ -28,7 +28,7 @@ export default async function handler(
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
-  // Email validation
+  // Email validation - basic format only
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({ error: 'Invalid email address' });
