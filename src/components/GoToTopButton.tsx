@@ -148,7 +148,7 @@ export const GoToTopButton = () => {
                     transition: 'all 0.5s',
                     transform: isHovered ? 'scale(1.05)' : isNear ? 'scale(1.02)' : 'scale(1)',
                     color: buttonSettings.color,
-                    opacity: isHovered ? 1 : isNear ? 0.8 : 0.7,
+                    opacity: 1,
                 }}
             >
                 <ChevronUp 
