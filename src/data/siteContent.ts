@@ -68,7 +68,7 @@ const defaultContent: SiteContent = {
   hero: {
     greeting: "Hello data enthusiast,",
     name: "I'm Parul",
-    bio: "Hi! I'm a Data Scientist based in Paris. Every day I explore data, build models, and create insights that drive decisions. Turning raw data into actionable intelligence is my passion. Numbers tell stories, don't you think?",
+    bio: "Hi! I'm a Data Scientist based in Chandigarh. Every day I explore data, build models, and create insights that drive decisions. Turning raw data into actionable intelligence is my passion. Numbers tell stories, don't you think?",
     footnote1: "A passionate data scientist skilled in ML, AI, and statistical analysis, open to opportunities.",
     footnote2: "Check out my Kaggle profile and GitHub for more projects.",
     profileImage: "",
