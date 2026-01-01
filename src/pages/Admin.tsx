@@ -1,0 +1,509 @@
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft, Save, Plus, Trash2, RotateCcw, Eye, EyeOff, Upload, Star } from "lucide-react";
+import { getSiteContent, saveSiteContent, resetSiteContent, SiteContent, FeaturedProject, SkillCategory, SocialLink } from "@/data/siteContent";
+import { projects as allProjects, Project } from "@/data/projects";
+import { toast } from "@/hooks/use-toast";
+import ImageUpload from "@/components/ImageUpload";
+
+const PROJECTS_STORAGE_KEY = "projects_data";
+
+const getProjects = (): Project[] => {
+  const stored = localStorage.getItem(PROJECTS_STORAGE_KEY);
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored);
+      return parsed.map((p: Project) => ({ 
+        ...p, 
+        images: p.images || [],
+        mainImageIndex: p.mainImageIndex ?? 0
+      }));
+    } catch {
+      return allProjects;
+    }
+  }
+  return allProjects;
+};
+
+const saveProjects = (projects: Project[]) => {
+  localStorage.setItem(PROJECTS_STORAGE_KEY, JSON.stringify(projects));
+  window.dispatchEvent(new Event("projectsUpdated"));
+};
+
+const Admin = () => {
+  const navigate = useNavigate();
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [content, setContent] = useState<SiteContent>(getSiteContent);
+  const [projects, setProjects] = useState<Project[]>(getProjects);
+  const [activeTab, setActiveTab] = useState<"hero" | "buttons" | "social" | "featured" | "skills" | "footer" | "projects">("hero");
+  const profileImageInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const authorized = sessionStorage.getItem("admin_authorized");
+    if (authorized !== "true") {
+      navigate("/");
+    } else {
+      setIsAuthorized(true);
+    }
+  }, [navigate]);
+
+  const handleSave = () => {
+    saveSiteContent(content);
+    saveProjects(projects);
+    window.dispatchEvent(new Event("siteContentUpdated"));
+    toast({ title: "Saved", description: "All changes have been saved." });
+  };
+
+  const handleReset = () => {
+    resetSiteContent();
+    localStorage.removeItem(PROJECTS_STORAGE_KEY);
+    setContent(getSiteContent());
+    setProjects(allProjects);
+    window.dispatchEvent(new Event("siteContentUpdated"));
+    window.dispatchEvent(new Event("projectsUpdated"));
+    toast({ title: "Reset", description: "All content has been reset to defaults." });
+  };
+
+  const handleExit = () => {
+    sessionStorage.removeItem("admin_authorized");
+    navigate("/");
+  };
+
+  const handleProfileImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Image too large. Please use an image under 2MB.");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setContent({ ...content, hero: { ...content.hero, profileImage: event.target?.result as string } });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Featured Projects handlers
+  const addFeaturedProject = () => {
+    setContent({
+      ...content,
+      featuredProjects: [...content.featuredProjects, { title: "New Project", category: "Category", description: "Description", githubUrl: "", imageUrl: "" }],
+    });
+  };
+
+  const removeFeaturedProject = (index: number) => {
+    setContent({ ...content, featuredProjects: content.featuredProjects.filter((_, i) => i !== index) });
+  };
+
+  const updateFeaturedProject = (index: number, field: keyof FeaturedProject, value: string) => {
+    const updated = [...content.featuredProjects];
+    updated[index] = { ...updated[index], [field]: value };
+    setContent({ ...content, featuredProjects: updated });
+  };
+
+  // Skill categories handlers
+  const addSkillCategory = () => {
+    setContent({ ...content, skillCategories: [...content.skillCategories, { title: "New Category", skills: ["Skill 1"] }] });
+  };
+
+  const removeSkillCategory = (index: number) => {
+    setContent({ ...content, skillCategories: content.skillCategories.filter((_, i) => i !== index) });
+  };
+
+  const updateSkillCategory = (index: number, field: keyof SkillCategory, value: string | string[]) => {
+    const updated = [...content.skillCategories];
+    updated[index] = { ...updated[index], [field]: value };
+    setContent({ ...content, skillCategories: updated });
+  };
+
+  // Sidebar social links handlers
+  const addSidebarSocialLink = () => {
+    setContent({ ...content, sidebarSocialLinks: [...content.sidebarSocialLinks, { label: "New Link", href: "https://", visible: true }] });
+  };
+
+  const removeSidebarSocialLink = (index: number) => {
+    setContent({ ...content, sidebarSocialLinks: content.sidebarSocialLinks.filter((_, i) => i !== index) });
+  };
+
+  const updateSidebarSocialLink = (index: number, field: keyof SocialLink, value: string | boolean) => {
+    const updated = [...content.sidebarSocialLinks];
+    updated[index] = { ...updated[index], [field]: value };
+    setContent({ ...content, sidebarSocialLinks: updated });
+  };
+
+  // Full projects handlers
+  const addProject = () => {
+    const newProject: Project = {
+      id: `project-${Date.now()}`,
+      title: "New Project",
+      category: "Category",
+      description: "Short description",
+      fullDescription: "Full description of the project.",
+      year: new Date().getFullYear().toString(),
+      technologies: ["Tech 1"],
+      challenges: ["Challenge 1"],
+      results: ["Result 1"],
+      images: [],
+      mainImageIndex: 0,
+    };
+    setProjects([...projects, newProject]);
+  };
+
+  const removeProject = (index: number) => {
+    setProjects(projects.filter((_, i) => i !== index));
+  };
+
+  const updateProject = (index: number, field: keyof Project, value: string | string[] | number) => {
+    const updated = [...projects];
+    updated[index] = { ...updated[index], [field]: value };
+    setProjects(updated);
+  };
+
+  const addProjectImage = (projectIndex: number, imageData: string) => {
+    const updated = [...projects];
+    updated[projectIndex] = {
+      ...updated[projectIndex],
+      images: [...(updated[projectIndex].images || []), imageData],
+    };
+    setProjects(updated);
+  };
+
+  const removeProjectImage = (projectIndex: number, imageIndex: number) => {
+    const updated = [...projects];
+    const currentMainIndex = updated[projectIndex].mainImageIndex;
+    updated[projectIndex] = {
+      ...updated[projectIndex],
+      images: updated[projectIndex].images.filter((_, i) => i !== imageIndex),
+      mainImageIndex: imageIndex < currentMainIndex ? currentMainIndex - 1 : (imageIndex === currentMainIndex ? 0 : currentMainIndex),
+    };
+    setProjects(updated);
+  };
+
+  const updateProjectImage = (projectIndex: number, imageIndex: number, value: string) => {
+    const updated = [...projects];
+    const images = [...updated[projectIndex].images];
+    images[imageIndex] = value;
+    updated[projectIndex] = { ...updated[projectIndex], images };
+    setProjects(updated);
+  };
+
+  const setMainImage = (projectIndex: number, imageIndex: number) => {
+    const updated = [...projects];
+    updated[projectIndex] = { ...updated[projectIndex], mainImageIndex: imageIndex };
+    setProjects(updated);
+  };
+
+  if (!isAuthorized) return null;
+
+  const tabs = [
+    { id: "hero", label: "Hero" },
+    { id: "buttons", label: "Buttons" },
+    { id: "social", label: "Social" },
+    { id: "featured", label: "Featured" },
+    { id: "skills", label: "Skills" },
+    { id: "footer", label: "Footer" },
+    { id: "projects", label: "Projects" },
+  ] as const;
+
+  return (
+    <div className="min-h-screen bg-background">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
+        <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4">
+          <button onClick={handleExit} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-mono text-xs md:text-sm">
+            <ArrowLeft size={16} /> Exit
+          </button>
+          <h1 className="font-mono text-xs md:text-sm uppercase tracking-wider text-foreground">Admin</h1>
+          <div className="flex items-center gap-2">
+            <button onClick={handleReset} className="flex items-center gap-1 px-2 md:px-3 py-1.5 md:py-2 border border-border text-muted-foreground hover:text-foreground transition-colors font-mono text-[10px] md:text-xs uppercase">
+              <RotateCcw size={12} /> Reset
+            </button>
+            <button onClick={handleSave} className="flex items-center gap-1 px-2 md:px-3 py-1.5 md:py-2 bg-foreground text-background hover:bg-accent-blue transition-colors font-mono text-[10px] md:text-xs uppercase">
+              <Save size={12} /> Save
+            </button>
+          </div>
+        </div>
+        <div className="flex gap-0 px-4 md:px-6 border-t border-border overflow-x-auto">
+          {tabs.map((tab) => (
+            <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`px-3 md:px-4 py-2 md:py-3 font-mono text-[10px] md:text-xs uppercase tracking-wider transition-colors border-b-2 -mb-px whitespace-nowrap ${activeTab === tab.id ? "border-accent-blue text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}>
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </header>
+
+      <main className="pt-28 md:pt-32 pb-16 px-4 md:px-6 max-w-4xl mx-auto">
+        {/* Hero Tab */}
+        {activeTab === "hero" && (
+          <div className="space-y-6">
+            <h2 className="font-sans text-xl md:text-2xl font-bold text-foreground mb-6">Hero Section</h2>
+            
+            {/* Profile Image */}
+            <div className="border border-border p-4 space-y-3">
+              <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground block">Profile Image</label>
+              <div className="flex items-center gap-4">
+                {content.hero.profileImage ? (
+                  <div className="relative">
+                    <img src={content.hero.profileImage} alt="Profile" className="w-20 h-20 rounded-full object-cover border-2 border-foreground" />
+                    <button onClick={() => setContent({ ...content, hero: { ...content.hero, profileImage: "" } })} className="absolute -top-1 -right-1 p-1 bg-destructive text-background rounded-full">
+                      <Trash2 size={12} />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="w-20 h-20 rounded-full border-2 border-dashed border-border flex items-center justify-center">
+                    <span className="text-muted-foreground text-xs">No image</span>
+                  </div>
+                )}
+                <div className="flex-1 space-y-2">
+                  <button onClick={() => profileImageInputRef.current?.click()} className="flex items-center gap-2 px-3 py-2 border border-border text-foreground hover:bg-muted transition-colors font-mono text-xs">
+                    <Upload size={14} /> Upload from device
+                  </button>
+                  <input type="url" placeholder="Or paste image URL" value={content.hero.profileImage?.startsWith("data:") ? "" : content.hero.profileImage} onChange={(e) => setContent({ ...content, hero: { ...content.hero, profileImage: e.target.value } })} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue" />
+                  <input ref={profileImageInputRef} type="file" accept="image/*" onChange={handleProfileImageUpload} className="hidden" />
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground block mb-2">Greeting</label>
+                <input type="text" value={content.hero.greeting} onChange={(e) => setContent({ ...content, hero: { ...content.hero, greeting: e.target.value } })} className="w-full bg-background border border-border px-4 py-3 text-foreground focus:outline-none focus:border-accent-blue" />
+              </div>
+              <div>
+                <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground block mb-2">Name</label>
+                <input type="text" value={content.hero.name} onChange={(e) => setContent({ ...content, hero: { ...content.hero, name: e.target.value } })} className="w-full bg-background border border-border px-4 py-3 text-foreground focus:outline-none focus:border-accent-blue" />
+              </div>
+              <div>
+                <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground block mb-2">Bio</label>
+                <textarea value={content.hero.bio} onChange={(e) => setContent({ ...content, hero: { ...content.hero, bio: e.target.value } })} rows={4} className="w-full bg-background border border-border px-4 py-3 text-foreground focus:outline-none focus:border-accent-blue resize-none" />
+              </div>
+              <div>
+                <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground block mb-2">Footnote 1 (*)</label>
+                <input type="text" value={content.hero.footnote1} onChange={(e) => setContent({ ...content, hero: { ...content.hero, footnote1: e.target.value } })} className="w-full bg-background border border-border px-4 py-3 text-foreground focus:outline-none focus:border-accent-blue" />
+              </div>
+              <div>
+                <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground block mb-2">Footnote 2 (**)</label>
+                <input type="text" value={content.hero.footnote2} onChange={(e) => setContent({ ...content, hero: { ...content.hero, footnote2: e.target.value } })} className="w-full bg-background border border-border px-4 py-3 text-foreground focus:outline-none focus:border-accent-blue" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Buttons Tab */}
+        {activeTab === "buttons" && (
+          <div className="space-y-6">
+            <h2 className="font-sans text-xl md:text-2xl font-bold text-foreground mb-6">Action Buttons</h2>
+            {["resume", "chat"].map((key) => {
+              const btn = content.actionButtons[key as "resume" | "chat"];
+              return (
+                <div key={key} className="border border-border p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs text-muted-foreground capitalize">{key} Button</span>
+                    <button onClick={() => setContent({ ...content, actionButtons: { ...content.actionButtons, [key]: { ...btn, visible: !btn.visible } } })} className={`p-2 transition-colors ${btn.visible ? 'text-foreground' : 'text-muted-foreground'}`}>
+                      {btn.visible ? <Eye size={16} /> : <EyeOff size={16} />}
+                    </button>
+                  </div>
+                  <input type="text" placeholder="Label" value={btn.label} onChange={(e) => setContent({ ...content, actionButtons: { ...content.actionButtons, [key]: { ...btn, label: e.target.value } } })} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue" />
+                  {key === "resume" && (
+                    <input type="text" placeholder="Annotation (optional)" value={btn.annotation || ""} onChange={(e) => setContent({ ...content, actionButtons: { ...content.actionButtons, [key]: { ...btn, annotation: e.target.value } } })} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue" />
+                  )}
+                  <input type="text" placeholder="Link URL" value={btn.link || ""} onChange={(e) => setContent({ ...content, actionButtons: { ...content.actionButtons, [key]: { ...btn, link: e.target.value } } })} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue" />
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Social Tab */}
+        {activeTab === "social" && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-sans text-xl md:text-2xl font-bold text-foreground">Sidebar Social Links</h2>
+              <button onClick={addSidebarSocialLink} className="flex items-center gap-2 px-3 py-2 border border-border text-foreground hover:bg-muted transition-colors font-mono text-xs uppercase">
+                <Plus size={14} /> Add
+              </button>
+            </div>
+            {content.sidebarSocialLinks.map((link, index) => (
+              <div key={index} className="border border-border p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xs text-muted-foreground">Link {index + 1}</span>
+                  <div className="flex items-center gap-2">
+                    <button onClick={() => updateSidebarSocialLink(index, "visible", !link.visible)} className={`p-2 transition-colors ${link.visible ? 'text-foreground' : 'text-muted-foreground'}`}>
+                      {link.visible ? <Eye size={16} /> : <EyeOff size={16} />}
+                    </button>
+                    <button onClick={() => removeSidebarSocialLink(index)} className="text-muted-foreground hover:text-destructive transition-colors"><Trash2 size={16} /></button>
+                  </div>
+                </div>
+                <input type="text" placeholder="Label" value={link.label} onChange={(e) => updateSidebarSocialLink(index, "label", e.target.value)} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue" />
+                <input type="url" placeholder="URL" value={link.href} onChange={(e) => updateSidebarSocialLink(index, "href", e.target.value)} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue" />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Featured Projects Tab */}
+        {activeTab === "featured" && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-sans text-xl md:text-2xl font-bold text-foreground">Featured Projects</h2>
+              <button onClick={addFeaturedProject} className="flex items-center gap-2 px-3 py-2 border border-border text-foreground hover:bg-muted transition-colors font-mono text-xs uppercase">
+                <Plus size={14} /> Add
+              </button>
+            </div>
+            {content.featuredProjects.map((project, index) => (
+              <div key={index} className="border border-border p-4 space-y-3">
+                <div className="flex items-start justify-between">
+                  <span className="font-mono text-xs text-muted-foreground">Project {index + 1}</span>
+                  <button onClick={() => removeFeaturedProject(index)} className="text-muted-foreground hover:text-destructive transition-colors"><Trash2 size={16} /></button>
+                </div>
+                <input type="text" placeholder="Title" value={project.title} onChange={(e) => updateFeaturedProject(index, "title", e.target.value)} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue" />
+                <input type="text" placeholder="Category" value={project.category} onChange={(e) => updateFeaturedProject(index, "category", e.target.value)} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue" />
+                <textarea placeholder="Description" value={project.description} onChange={(e) => updateFeaturedProject(index, "description", e.target.value)} rows={2} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue resize-none" />
+                <input type="text" placeholder="GitHub URL" value={project.githubUrl} onChange={(e) => updateFeaturedProject(index, "githubUrl", e.target.value)} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue" />
+                <ImageUpload label="Project Image" value={project.imageUrl || ""} onChange={(val) => updateFeaturedProject(index, "imageUrl", val)} />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Skills Tab */}
+        {activeTab === "skills" && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-sans text-xl md:text-2xl font-bold text-foreground">Skills</h2>
+              <button onClick={addSkillCategory} className="flex items-center gap-2 px-3 py-2 border border-border text-foreground hover:bg-muted transition-colors font-mono text-xs uppercase">
+                <Plus size={14} /> Add
+              </button>
+            </div>
+            {content.skillCategories.map((category, index) => (
+              <div key={index} className="border border-border p-4 space-y-3">
+                <div className="flex items-start justify-between">
+                  <span className="font-mono text-xs text-muted-foreground">Category {index + 1}</span>
+                  <button onClick={() => removeSkillCategory(index)} className="text-muted-foreground hover:text-destructive transition-colors"><Trash2 size={16} /></button>
+                </div>
+                <input type="text" placeholder="Category Title" value={category.title} onChange={(e) => updateSkillCategory(index, "title", e.target.value)} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue" />
+                <div>
+                  <label className="font-mono text-xs text-muted-foreground block mb-1">Skills (comma-separated)</label>
+                  <input type="text" value={category.skills.join(", ")} onChange={(e) => updateSkillCategory(index, "skills", e.target.value.split(",").map((s) => s.trim()).filter(Boolean))} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue" />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Footer Tab */}
+        {activeTab === "footer" && (
+          <div className="space-y-6">
+            <h2 className="font-sans text-xl md:text-2xl font-bold text-foreground mb-6">Footer</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground block mb-2">CTA Title</label>
+                <input type="text" value={content.footer.ctaTitle} onChange={(e) => setContent({ ...content, footer: { ...content.footer, ctaTitle: e.target.value } })} className="w-full bg-background border border-border px-4 py-3 text-foreground focus:outline-none focus:border-accent-blue" />
+              </div>
+              <div>
+                <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground block mb-2">CTA Description</label>
+                <textarea value={content.footer.ctaDescription} onChange={(e) => setContent({ ...content, footer: { ...content.footer, ctaDescription: e.target.value } })} rows={2} className="w-full bg-background border border-border px-4 py-3 text-foreground focus:outline-none focus:border-accent-blue resize-none" />
+              </div>
+              <div>
+                <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground block mb-2">Email</label>
+                <input type="email" value={content.footer.email} onChange={(e) => setContent({ ...content, footer: { ...content.footer, email: e.target.value } })} className="w-full bg-background border border-border px-4 py-3 text-foreground focus:outline-none focus:border-accent-blue" />
+              </div>
+              <div>
+                <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground block mb-2">Copyright</label>
+                <input type="text" value={content.footer.copyright} onChange={(e) => setContent({ ...content, footer: { ...content.footer, copyright: e.target.value } })} className="w-full bg-background border border-border px-4 py-3 text-foreground focus:outline-none focus:border-accent-blue" />
+              </div>
+              <div>
+                <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground block mb-2">Tagline</label>
+                <input type="text" value={content.footer.tagline} onChange={(e) => setContent({ ...content, footer: { ...content.footer, tagline: e.target.value } })} className="w-full bg-background border border-border px-4 py-3 text-foreground focus:outline-none focus:border-accent-blue" />
+              </div>
+              <div className="border-t border-border pt-4 mt-6">
+                <h3 className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-4">Footer Social Links</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {(["linkedin", "dribbble", "github", "twitter"] as const).map((key) => (
+                    <div key={key}>
+                      <label className="font-mono text-xs text-muted-foreground block mb-1 capitalize">{key}</label>
+                      <input type="url" value={content.footer.socialLinks[key]} onChange={(e) => setContent({ ...content, footer: { ...content.footer, socialLinks: { ...content.footer.socialLinks, [key]: e.target.value } } })} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* All Projects Tab */}
+        {activeTab === "projects" && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-sans text-xl md:text-2xl font-bold text-foreground">All Projects</h2>
+              <button onClick={addProject} className="flex items-center gap-2 px-3 py-2 border border-border text-foreground hover:bg-muted transition-colors font-mono text-xs uppercase">
+                <Plus size={14} /> Add
+              </button>
+            </div>
+            {projects.map((project, index) => (
+              <div key={project.id} className="border border-border p-4 space-y-3">
+                <div className="flex items-start justify-between">
+                  <span className="font-mono text-xs text-muted-foreground">ID: {project.id}</span>
+                  <button onClick={() => removeProject(index)} className="text-muted-foreground hover:text-destructive transition-colors"><Trash2 size={16} /></button>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <input type="text" placeholder="Title" value={project.title} onChange={(e) => updateProject(index, "title", e.target.value)} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue" />
+                  <input type="text" placeholder="Category" value={project.category} onChange={(e) => updateProject(index, "category", e.target.value)} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue" />
+                </div>
+                <input type="text" placeholder="Year" value={project.year} onChange={(e) => updateProject(index, "year", e.target.value)} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue" />
+                <textarea placeholder="Short Description" value={project.description} onChange={(e) => updateProject(index, "description", e.target.value)} rows={2} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue resize-none" />
+                <textarea placeholder="Full Description" value={project.fullDescription} onChange={(e) => updateProject(index, "fullDescription", e.target.value)} rows={3} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue resize-none" />
+                <div>
+                  <label className="font-mono text-xs text-muted-foreground block mb-1">Technologies (comma-separated)</label>
+                  <input type="text" value={project.technologies.join(", ")} onChange={(e) => updateProject(index, "technologies", e.target.value.split(",").map((s) => s.trim()).filter(Boolean))} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue" />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <input type="url" placeholder="Live URL (optional)" value={project.liveUrl || ""} onChange={(e) => updateProject(index, "liveUrl", e.target.value)} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue" />
+                  <input type="url" placeholder="GitHub URL (optional)" value={project.githubUrl || ""} onChange={(e) => updateProject(index, "githubUrl", e.target.value)} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue" />
+                </div>
+                <div>
+                  <label className="font-mono text-xs text-muted-foreground block mb-1">Challenges (comma-separated)</label>
+                  <textarea value={project.challenges.join(", ")} onChange={(e) => updateProject(index, "challenges", e.target.value.split(",").map((s) => s.trim()).filter(Boolean))} rows={2} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue resize-none" />
+                </div>
+                <div>
+                  <label className="font-mono text-xs text-muted-foreground block mb-1">Results (comma-separated)</label>
+                  <textarea value={project.results.join(", ")} onChange={(e) => updateProject(index, "results", e.target.value.split(",").map((s) => s.trim()).filter(Boolean))} rows={2} className="w-full bg-background border border-border px-3 py-2 text-foreground text-sm focus:outline-none focus:border-accent-blue resize-none" />
+                </div>
+
+                {/* Images Section */}
+                <div className="border-t border-border pt-3 mt-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="font-mono text-xs text-muted-foreground">Images (click star to set main)</label>
+                  </div>
+                  
+                  {/* Add new image */}
+                  <ImageUpload label="" value="" onChange={(val) => { if (val) addProjectImage(index, val); }} />
+                  
+                  {/* Existing images */}
+                  {project.images && project.images.length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-3">
+                      {project.images.map((url, imgIndex) => url && (
+                        <div key={imgIndex} className="relative group">
+                          <img src={url} alt={`Image ${imgIndex + 1}`} className={`w-full h-20 object-cover border-2 ${project.mainImageIndex === imgIndex ? 'border-accent-blue' : 'border-border'}`} />
+                          <div className="absolute top-1 right-1 flex gap-1">
+                            <button onClick={() => setMainImage(index, imgIndex)} className={`p-1 rounded ${project.mainImageIndex === imgIndex ? 'bg-accent-blue text-background' : 'bg-background/80 text-muted-foreground hover:text-accent-blue'}`} title="Set as main image">
+                              <Star size={12} fill={project.mainImageIndex === imgIndex ? "currentColor" : "none"} />
+                            </button>
+                            <button onClick={() => removeProjectImage(index, imgIndex)} className="p-1 bg-background/80 text-muted-foreground hover:text-destructive rounded">
+                              <Trash2 size={12} />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </main>
+    </div>
+  );
+};
+
+export default Admin;
