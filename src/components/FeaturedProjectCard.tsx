@@ -10,7 +10,10 @@ interface FeaturedProjectCardProps {
   index: number;
 }
 
-const FeaturedProjectCard = ({ title, category, description, imageUrl, githubUrl, index }: FeaturedProjectCardProps) => {
+const FeaturedProjectCard = ({
+  title, category, description, imageUrl, githubUrl, index
+}: FeaturedProjectCardProps) => {
+  
   return (
     <div
       className="group block opacity-0 animate-fade-in"

@@ -1,7 +1,6 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
-import AdminPasswordModal from "./AdminPasswordModal";
 
 const navItems = [
   { label: "Home", path: "/" },
@@ -11,11 +10,8 @@ const navItems = [
 
 const TopNav = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const toggleRef = useRef<HTMLButtonElement>(null);
-  const hoverTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [isOverDark, setIsOverDark] = useState(false);
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [isDark, setIsDark] = useState(() => {
     if (typeof window !== "undefined") {
       return document.documentElement.classList.contains("dark");
@@ -77,41 +73,13 @@ const TopNav = () => {
     };
   }, []);
 
-  // 5-second hover handler for admin access
-  const handleMouseEnter = () => {
-    hoverTimerRef.current = setTimeout(() => {
-      setShowPasswordModal(true);
-    }, 5000);
-  };
-
-  const handleMouseLeave = () => {
-    if (hoverTimerRef.current) {
-      clearTimeout(hoverTimerRef.current);
-      setShowPasswordModal(false)
-      hoverTimerRef.current = null;
-    }
-  };
-
-  const handleAdminSuccess = () => {
-    setShowPasswordModal(false);
-    sessionStorage.setItem("admin_authorized", "true");
-    navigate("/admin");
-  };
-
   return (
     <>
       {/* Dark mode toggle - top left */}
       <button
         ref={toggleRef}
-        onClick={() => {
-          if (hoverTimerRef.current) {
-            clearTimeout(hoverTimerRef.current);
-            hoverTimerRef.current = null
-          }
-          setIsDark(!isDark)}
+        onClick={() => {setIsDark(!isDark)}
         }
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
         className={`absolute md:fixed top-8 left-8 z-50 transition-colors duration-300 ${
           isOverDark 
             ? "text-background hover:text-accent-blue" 
@@ -138,13 +106,6 @@ const TopNav = () => {
           </Link>
         ))}
       </nav>
-
-      {/* Admin Password Modal */}
-      <AdminPasswordModal
-        isOpen={showPasswordModal}
-        onClose={() => setShowPasswordModal(false)}
-        onSuccess={handleAdminSuccess}
-      />
     </>
   );
 };
