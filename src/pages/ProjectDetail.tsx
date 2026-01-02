@@ -57,7 +57,6 @@ const ProjectDetail = () => {
           </div>
           <h1 className="font-sans text-3xl md:text-5xl lg:text-7xl font-black text-hero leading-tight mb-6">
             {project.title}
-            <span className="text-accent-blue">.</span>
           </h1>
           
           {/* Action Links */}

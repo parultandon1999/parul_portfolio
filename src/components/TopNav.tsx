@@ -87,6 +87,7 @@ const TopNav = () => {
   const handleMouseLeave = () => {
     if (hoverTimerRef.current) {
       clearTimeout(hoverTimerRef.current);
+      setShowPasswordModal(false)
       hoverTimerRef.current = null;
     }
   };
@@ -102,10 +103,16 @@ const TopNav = () => {
       {/* Dark mode toggle - top left */}
       <button
         ref={toggleRef}
-        onClick={() => setIsDark(!isDark)}
+        onClick={() => {
+          if (hoverTimerRef.current) {
+            clearTimeout(hoverTimerRef.current);
+            hoverTimerRef.current = null
+          }
+          setIsDark(!isDark)}
+        }
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={`fixed top-8 left-8 z-50 transition-colors duration-300 ${
+        className={`absolute md:fixed top-8 left-8 z-50 transition-colors duration-300 ${
           isOverDark 
             ? "text-background hover:text-accent-blue" 
             : "text-foreground hover:text-accent-blue"

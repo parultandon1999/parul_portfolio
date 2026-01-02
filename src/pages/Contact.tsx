@@ -46,7 +46,6 @@ const Contact = () => {
   return (
     <main className="min-h-screen bg-background relative">
       <TopNav />
-
       <div className="w-full pl-6 pr-16 md:px-16 lg:px-24 xl:px-32 py-24 md:py-32">
         {/* Header */}
         <div className="mb-16 md:mb-24 opacity-0 animate-fade-in" style={{ animationDelay: "0.1s" }}>
@@ -55,13 +54,11 @@ const Contact = () => {
           </span>
           <h1 className="font-sans text-5xl md:text-6xl lg:text-8xl font-black text-hero leading-none tracking-tight mb-6">
             Let's talk
-            <span className="text-accent-blue">.</span>
           </h1>
           <p className="font-sans text-lg text-body max-w-lg">
             Have a data challenge or machine learning project in mind? I'd love to hear about it.
           </p>
         </div>
-
         <div className="grid lg:grid-cols-5 gap-16 lg:gap-24 max-w-6xl">
           {/* Contact Info */}
           <div className="lg:col-span-2 space-y-8 opacity-0 animate-fade-in" style={{ animationDelay: "0.3s" }}>
@@ -79,7 +76,6 @@ const Contact = () => {
                 </a>
               </div>
             </div>
-
             <div className="flex items-start gap-4">
               <MapPin className="w-5 h-5 text-accent-blue mt-0.5" strokeWidth={1.5} />
               <div>
@@ -91,7 +87,6 @@ const Contact = () => {
                 </p>
               </div>
             </div>
-
             <div className="flex items-start gap-4">
               <Clock className="w-5 h-5 text-accent-blue mt-0.5" strokeWidth={1.5} />
               <div>
@@ -103,7 +98,6 @@ const Contact = () => {
                 </p>
               </div>
             </div>
-
             <div className="flex items-start gap-4">
               <Briefcase className="w-5 h-5 text-accent-blue mt-0.5" strokeWidth={1.5} />
               <div>
@@ -115,7 +109,6 @@ const Contact = () => {
                 </p>
               </div>
             </div>
-
             <div className="pt-6 border-t border-border">
               <p className="font-sans text-sm text-body leading-relaxed">
                 I'm currently open to freelance data science projects and full-time ML/AI opportunities. 
@@ -182,7 +175,6 @@ const Contact = () => {
                     )}
                   </div>
                 </div>
-
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label className="font-sans text-xs font-semibold tracking-[0.1em] uppercase text-muted-foreground mb-2 block">
@@ -211,7 +203,6 @@ const Contact = () => {
                     />
                   </div>
                 </div>
-
                 <div>
                   <label className="font-sans text-xs font-semibold tracking-[0.1em] uppercase text-muted-foreground mb-2 block">
                     Subject
@@ -232,7 +223,6 @@ const Contact = () => {
                     </p>
                   )}
                 </div>
-
                 <div>
                   <label className="font-sans text-xs font-semibold tracking-[0.1em] uppercase text-muted-foreground mb-2 block">
                     Message
@@ -253,7 +243,6 @@ const Contact = () => {
                     </p>
                   )}
                 </div>
-
                 <button
                   type="submit"
                   className="group inline-flex items-center gap-3 bg-foreground text-background px-6 py-3 font-mono text-xs font-bold uppercase tracking-wider hover:bg-accent-blue transition-colors duration-300"
@@ -266,7 +255,6 @@ const Contact = () => {
           </div>
         </div>
       </div>
-
       <SocialLinksContainer />
       <Footer />
     </main>

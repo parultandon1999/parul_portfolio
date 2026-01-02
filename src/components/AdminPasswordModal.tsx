@@ -7,7 +7,7 @@ interface AdminPasswordModalProps {
   onSuccess: () => void;
 }
 
-const ADMIN_PASSWORD = "admin123"; // Simple client-side password
+const ADMIN_PASSWORD = "admin123";
 
 const AdminPasswordModal = ({ isOpen, onClose, onSuccess }: AdminPasswordModalProps) => {
   const [password, setPassword] = useState("");

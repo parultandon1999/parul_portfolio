@@ -1,6 +1,3 @@
-// Centralized content store for the entire site
-// All content is editable through the admin dashboard
-
 export interface HeroContent {
   greeting: string;
   name: string;
@@ -75,13 +72,13 @@ const defaultContent: SiteContent = {
   },
   actionButtons: {
     resume: {
-      label: "If you want my resume",
-      annotation: "**",
+      label: "resume",
+      annotation: "",
       visible: true,
       link: "",
     },
     chat: {
-      label: "Or have chat",
+      label: "chat",
       visible: true,
       link: "/contact",
     },

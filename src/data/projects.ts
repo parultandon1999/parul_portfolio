@@ -10,8 +10,8 @@ export interface Project {
   githubUrl?: string;
   challenges: string[];
   results: string[];
-  images: string[]; // Array of image URLs or base64
-  mainImageIndex: number; // Index of the main image to show on homepage
+  images: string[];
+  mainImageIndex: number;
 }
 
 export const projects: Project[] = [

@@ -22,12 +22,11 @@ const Index = () => {
       <section className="min-h-screen flex items-center relative">
         <div className="w-full pl-6 pr-16 md:px-16 lg:px-24 xl:px-32 py-24 md:py-32 lg:py-40">
           <div className="space-y-6 md:space-y-8 opacity-0 animate-fade-in" style={{ animationDelay: "0.1s" }}>
-            <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl text-foreground italic">
+            <h2 className="font-serif text-2xl md:text-3xl lg:text-2xl text-foreground italic">
               {content.hero.greeting}
             </h2>
-            <h1 className="font-sans text-6xl md:text-8xl lg:text-[10rem] xl:text-[12rem] font-black text-hero leading-none tracking-tight">
+            <h1 className="font-sans text-6xl md:text-8xl lg:text-[10rem] xl:text-[10rem] font-black text-hero leading-none tracking-tight">
               {content.hero.name}
-              <span className="text-accent-blue text-4xl md:text-6xl lg:text-7xl align-super ml-1">*</span>
             </h1>
           </div>
 
@@ -89,7 +88,7 @@ const Index = () => {
                 Selected Work
               </span>
               <h2 className="font-sans text-4xl md:text-5xl lg:text-7xl font-black text-hero leading-none">
-                Featured Projects<span className="text-accent-blue">.</span>
+                Projects
               </h2>
             </div>
             <Link
@@ -125,7 +124,7 @@ const Index = () => {
               Tech Stack
             </span>
             <h2 className="font-sans text-4xl md:text-5xl lg:text-7xl font-black text-hero leading-none">
-              Skills & Expertise<span className="text-accent-blue">.</span>
+              Skills & Expertise
             </h2>
           </div>
 
@@ -144,7 +143,7 @@ const Index = () => {
             Contact
           </span>
           <h2 className="font-sans text-3xl md:text-4xl lg:text-5xl font-black text-hero leading-none mb-12">
-            Send a message<span className="text-accent-blue">.</span>
+            Send a message
           </h2>
           <ContactForm />
         </div>

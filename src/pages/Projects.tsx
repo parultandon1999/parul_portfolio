@@ -18,7 +18,6 @@ const Projects = () => {
           </span>
           <h1 className="font-sans text-4xl md:text-6xl lg:text-8xl font-black text-hero leading-none tracking-tight mb-4 md:mb-6">
             Projects
-            <span className="text-accent-blue">.</span>
           </h1>
           <p className="font-sans text-base md:text-lg lg:text-xl text-body max-w-2xl">
             A collection of data science and machine learning projects. Each project showcases end-to-end problem solving from data exploration to model deployment.
