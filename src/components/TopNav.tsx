@@ -5,7 +5,6 @@ import { useEffect, useState, useRef } from "react";
 const navItems = [
   { label: "Home", path: "/" },
   { label: "Projects", path: "/projects" },
-  { label: "Contact", path: "/contact" },
 ];
 
 const TopNav = () => {
